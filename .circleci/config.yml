@@ -25,4 +25,4 @@ jobs:
           paths:
             - ./vendor
 
-      - run: ./vendor/bin/phpunit --configuration phpunit.xml
+      - run: ./vendor/bin/phpunit --configuration ./phpunit.xml
