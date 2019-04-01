@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Client
+ */
+class Client
+{
+
+}
