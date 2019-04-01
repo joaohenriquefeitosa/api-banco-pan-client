@@ -1,0 +1,13 @@
+{
+    "name": "bevicred-digital/api-banco-pan-client",
+    "description": "Client da bevicred para a API do PAN",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Caio Russi",
+            "email": "caio.russi@bevicred.com.br"
+        }
+    ],
+    "minimum-stability": "stable"
+}
