@@ -31,7 +31,7 @@ jobs:
 
       - run:
           name: Unit Tests
-          command: ./vendor/bin/phpunit
+          command: ./vendor/bin/phpunit --configuration phpunit.xml.dist
 
 workflows:
   version: 2
