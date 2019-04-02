@@ -35,7 +35,6 @@ class Affiliates
     /**
      * @param string $apiKey
      * @param string $accessToken
-     * @param string $promo_code
      *
      * @return Response
      */
