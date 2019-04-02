@@ -4,6 +4,7 @@ namespace Pan\Auth;
 
 use Exception;
 use Pan\Http\HttpRequest;
+use Pan\Response;
 
 /**
  * BasicAuth
@@ -13,9 +14,9 @@ use Pan\Http\HttpRequest;
 class BasicAuth
 {
     /**
-     * @var string
+     * @const string
      */
-    private $accessToken;
+    const ENDPOINT = '5ca397284b00002e0020971d';
 
     /**
      * @var HttpRequest
@@ -37,15 +38,11 @@ class BasicAuth
      * @param string $password
      * @param string $apiKey
      *
-     * @return string
+     * @return Response
      * @throws Exception
      */
-    public function authenticate(string $username, string $password, string $apiKey)
+    public function authenticate(string $username, string $password, string $apiKey) : Response
     {
-        if (empty($username) or empty($password) or empty($apiKey)) {
-            throw new Exception("Missing Parameters");
-        }
-
         $header = [
             'Content-type' => 'application/json',
             'Api-Key' => $apiKey,
@@ -58,20 +55,8 @@ class BasicAuth
             'grant_type' => $username . $password
         ];
 
-        $result = $this->httpRequest->post($params, $header, 'authenticate');
-
-        $this->setAccessToken($result->getContent()["access_token"]);
+        $result = $this->httpRequest->post($params, $header, self::ENDPOINT);
 
         return $result;
-    }
-
-    public function getAccessToken()
-    {
-        return $this->accessToken;
-    }
-
-    public function setAccessToken(string $accessToken)
-    {
-        $this->accessToken = $accessToken;
     }
 }
