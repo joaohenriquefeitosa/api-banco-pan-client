@@ -89,12 +89,4 @@ class Client
 
         return $result;
     }
-
-    /**
-     * @param string $accessToken
-     */
-    public function setAccessToken(string $accessToken)
-    {
-        $this->accessToken = $accessToken;
-    }
 }
