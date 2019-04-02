@@ -7,13 +7,13 @@ use http\Exception\InvalidArgumentException;
 use Pan\Auth\BasicAuth;
 use Pan\Resource\Affiliates;
 use Pan\Resource\Covenants;
+use Pan\Resource\ReleaseMedium;
 
 /**
  * Client
  */
 class Client
 {
-
     /**
      * @var BasicAuth
      */
@@ -28,6 +28,11 @@ class Client
      * @var Affiliates
      */
     private $affiliates;
+
+    /**
+     * @var ReleaseMedium
+     */
+    private $releaseMedium;
 
     /**
      * @var string
@@ -51,6 +56,7 @@ class Client
         $this->basicAuth = new BasicAuth();
         $this->covenants = new Covenants();
         $this->affiliates = new Affiliates();
+        $this->releaseMedium = new ReleaseMedium();
 
         $this->apiKey = $apiKey;
     }
@@ -97,13 +103,41 @@ class Client
         return $result;
     }
 
-    public function filiais()
+    public function filiais(): Response
     {
         if (empty($this->accessToken) or empty($this->apiKey)) {
             throw new Exception('Need to authenticate');
         }
 
         $result = $this->affiliates->list($this->apiKey, $this->accessToken);
+
+        return $result;
+    }
+
+    /**
+     * @param string $codigo_convenio
+     * @param string $tipo_operacao
+     * @param string $cep_cliente
+     * @param string $valor_cliente
+     *
+     * @return Response
+     * @throws Exception
+     */
+    public function meio_liberacao(string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente): Response
+    {
+        if (empty($this->accessToken) or empty($this->apiKey)) {
+            throw new Exception('Need to authenticate');
+        }
+
+        $result = $this->releaseMedium
+            ->list(
+                $this->apiKey,
+                $this->accessToken,
+                $codigo_convenio,
+                $tipo_operacao,
+                $cep_cliente,
+                $valor_cliente
+            );
 
         return $result;
     }
