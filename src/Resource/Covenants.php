@@ -36,17 +36,17 @@ class Covenants
 
     /**
      * @param string $apiKey
-     * @param string $token
+     * @param string $accessToken
      * @param string $promo_code
      *
      * @return Response
      */
-    public function list(string $apiKey, string $token, string $promo_code) : Response
+    public function list(string $apiKey, string $accessToken, string $promo_code) : Response
     {
         $header = [
             'Content-type' => 'application/json',
             'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer ' . $accessToken
         ];
 
         $params = [

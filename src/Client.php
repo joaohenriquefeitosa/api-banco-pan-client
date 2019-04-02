@@ -3,6 +3,7 @@
 namespace Pan;
 
 use Exception;
+use http\Exception\InvalidArgumentException;
 use Pan\Auth\BasicAuth;
 use Pan\Resource\Covenants;
 
@@ -52,12 +53,13 @@ class Client
      * @param string $password
      *
      * @return Response
+     * @throws InvalidArgumentException
      * @throws \Exception
      */
     public function authenticate(string $username, string $password) : Response
     {
         if (empty($username) or empty($password) or empty($this->apiKey)) {
-            throw new Exception("Missing Parameters");
+            throw new InvalidArgumentException("Missing Parameters");
         }
 
         $result = $this->basicAuth->authenticate($username, $password, $this->apiKey);
@@ -71,12 +73,16 @@ class Client
      * @param string $promo_code
      *
      * @return Response
+     * @throws InvalidArgumentException
      * @throws Exception
      */
     public function covenants(string $promo_code) : Response
     {
-        if (empty($promo_code) or empty($this->accessToken) or empty($this->apiKey)) {
-            throw new Exception("Missing Parameters");
+        if (empty($promo_code)) {
+            throw new InvalidArgumentException("Missing Parameters");
+        }
+        if (empty($this->accessToken) or empty($this->apiKey)) {
+            throw new Exception('Need to authenticate');
         }
 
         $result = $this->covenants->list($this->apiKey, $this->accessToken, $promo_code);

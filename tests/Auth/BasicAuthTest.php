@@ -1,27 +1,29 @@
 <?php
 
-use Pan\Client;
+
+use Pan\Auth\BasicAuth;
 use PHPUnit\Framework\TestCase;
 
-class ClientTest extends TestCase
+class BasicAuthTest extends TestCase
 {
     /**
-     * @var Client
+     * @var BasicAuth
      */
-    private $client;
+    private $basicAuth;
 
     /**
      * @throws Exception
      */
     public function setUp()
     {
-        $this->client = new Client('l70459e7eac7fd4b2aaf6aebad9aaa41f6');
+
+        $this->basicAuth = new BasicAuth();
 
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
     public function testAuthenticationSuccessfully() {
-        $result = $this->client->authenticate('01234567890_112358', 'Senha@1321');
+        $result = $this->basicAuth->authenticate('', '', '');
         $content = $result->getContent();
 
         $this->assertNotEmpty($result);
