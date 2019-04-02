@@ -55,7 +55,7 @@ class BasicAuth
             'grant_type' => $username . $password
         ];
 
-        $result = $this->httpRequest->post($params, $header, self::ENDPOINT);
+        $result = $this->httpRequest->post(self::ENDPOINT, $header, $params);
 
         return $result;
     }

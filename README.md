@@ -16,11 +16,15 @@ composer require bevicred-digital/api-banco-pan-client
 ### Autenticação
 ```php
 $client = new Client("{Api-Key}");  
-$client->authenticate("{username}", "{password}");
+$client->autenticacao("{username}", "{password}");
 ```
 ### Convênios
 Retorna uma lista com os convênios habilitados.
 ```php
-$result = $client->covenants("{codigo_promotora}");
+$result = $client->convenios("{codigo_promotora}");
 ```
-
+### Filiais
+Retorna a lista de filiais e sua promotora relacionada os quais o usuário está habilitado a realizar operações.
+```php
+$result = $client->filiais();
+```

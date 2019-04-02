@@ -29,11 +29,11 @@ class HttpRequest
     /**
      * @param array $params
      * @param array $header
-     * @param $endpoint
+     * @param string $endpoint
      *
      * @return Response
      */
-    public function post($params, $header, $endpoint) : Response
+    public function post($endpoint, $header, $params = []) : Response
     {
         $ch = curl_init(self::API_BASE_PATH . $endpoint);
 
@@ -61,11 +61,11 @@ class HttpRequest
     /**
      * @param array $params
      * @param array $header
-     * @param $endpoint
+     * @param string $endpoint
      *
      * @return Response
      */
-    public function get($params, $header, $endpoint) : Response
+    public function get($endpoint, $header, $params = []) : Response
     {
         $ch = curl_init(self::API_BASE_PATH . $endpoint);
 

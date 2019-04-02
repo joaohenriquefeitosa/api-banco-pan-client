@@ -5,6 +5,7 @@ namespace Pan;
 use Exception;
 use http\Exception\InvalidArgumentException;
 use Pan\Auth\BasicAuth;
+use Pan\Resource\Affiliates;
 use Pan\Resource\Covenants;
 
 /**
@@ -22,6 +23,11 @@ class Client
      * @var Covenants
      */
     private $covenants;
+
+    /**
+     * @var Affiliates
+     */
+    private $affiliates;
 
     /**
      * @var string
@@ -44,6 +50,7 @@ class Client
     {
         $this->basicAuth = new BasicAuth();
         $this->covenants = new Covenants();
+        $this->affiliates = new Affiliates();
 
         $this->apiKey = $apiKey;
     }
@@ -56,7 +63,7 @@ class Client
      * @throws InvalidArgumentException
      * @throws \Exception
      */
-    public function authenticate(string $username, string $password) : Response
+    public function autenticacao(string $username, string $password) : Response
     {
         if (empty($username) or empty($password) or empty($this->apiKey)) {
             throw new InvalidArgumentException("Missing Parameters");
@@ -76,7 +83,7 @@ class Client
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function covenants(string $promo_code) : Response
+    public function convenios(string $promo_code) : Response
     {
         if (empty($promo_code)) {
             throw new InvalidArgumentException("Missing Parameters");
@@ -86,6 +93,17 @@ class Client
         }
 
         $result = $this->covenants->list($this->apiKey, $this->accessToken, $promo_code);
+
+        return $result;
+    }
+
+    public function filiais()
+    {
+        if (empty($this->accessToken) or empty($this->apiKey)) {
+            throw new Exception('Need to authenticate');
+        }
+
+        $result = $this->affiliates->list($this->apiKey, $this->accessToken);
 
         return $result;
     }
