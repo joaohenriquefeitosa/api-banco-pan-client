@@ -12,5 +12,14 @@
     "minimum-stability": "stable",
     "require-dev": {
         "phpunit/phpunit": "^7"
+    },
+    "require": {
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pan\\": "src/"
+        }
     }
 }
