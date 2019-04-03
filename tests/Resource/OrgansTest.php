@@ -18,7 +18,7 @@ class OrgansTest extends TestCase
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
-    public function testCovenantsListingSuccessfully()
+    public function testOrgansListingSuccessfully()
     {
         $result = $this->organs->list('', '', '');
         $content = $result->getContent();
