@@ -5,30 +5,43 @@ namespace Pan\Resource;
 
 
 use Pan\Http\HttpRequest;
+use Pan\Response;
 
 /**
- * ReleaseMedium
+ * Orgaos
  *
  * @package Pan\Resource
  */
-class ReleaseMedium
+class Orgaos
 {
     /**
      * @const string
      */
-    const ENDPOINT = '5ca3ca794b0000600020981a';
+    const ENDPOINT = '5ca497934b00002b63209c8d';
 
     /**
      * @var HttpRequest
      */
     private $httpRequest;
 
+    /**
+     * Orgaos constructor.
+     *
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->httpRequest = new HttpRequest();
     }
 
-    public function list(string $apiKey, string $accessToken, string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente)
+    /**
+     * @param string $apiKey
+     * @param string $accessToken
+     * @param string $codigo_convenio
+     *
+     * @return Response
+     */
+    public function listar(string $apiKey, string $accessToken, string $codigo_convenio) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -37,10 +50,7 @@ class ReleaseMedium
         ];
 
         $params = [
-            'codigo_convenio' => $codigo_convenio,
-            'tipo_operacao' => $tipo_operacao,
-            'cep_cliente' => $cep_cliente,
-            'valor_cliente' => $valor_cliente
+            'codigo_convenio' => $codigo_convenio
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);

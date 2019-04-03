@@ -5,43 +5,30 @@ namespace Pan\Resource;
 
 
 use Pan\Http\HttpRequest;
-use Pan\Response;
 
 /**
- * Covenants
+ * MeioLiberacao
  *
  * @package Pan\Resource
  */
-class Covenants
+class MeioLiberacao
 {
     /**
      * @const string
      */
-    const ENDPOINT = '5ca397924b00004e00209720';
+    const ENDPOINT = '5ca3ca794b0000600020981a';
 
     /**
      * @var HttpRequest
      */
     private $httpRequest;
 
-    /**
-     * Covenants constructor.
-     *
-     * @throws \Exception
-     */
     public function __construct()
     {
         $this->httpRequest = new HttpRequest();
     }
 
-    /**
-     * @param string $apiKey
-     * @param string $accessToken
-     * @param string $promo_code
-     *
-     * @return Response
-     */
-    public function list(string $apiKey, string $accessToken, string $promo_code) : Response
+    public function listar(string $apiKey, string $accessToken, string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente)
     {
         $header = [
             'Content-type' => 'application/json',
@@ -50,7 +37,10 @@ class Covenants
         ];
 
         $params = [
-            'codigo_promotora' => $promo_code
+            'codigo_convenio' => $codigo_convenio,
+            'tipo_operacao' => $tipo_operacao,
+            'cep_cliente' => $cep_cliente,
+            'valor_cliente' => $valor_cliente
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);

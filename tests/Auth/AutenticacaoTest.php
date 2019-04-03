@@ -1,15 +1,15 @@
 <?php
 
 
-use Pan\Auth\BasicAuth;
+use Pan\Auth\Autenticacao;
 use PHPUnit\Framework\TestCase;
 
-class BasicAuthTest extends TestCase
+class AutenticacaoTest extends TestCase
 {
     /**
-     * @var BasicAuth
+     * @var Autenticacao
      */
-    private $basicAuth;
+    private $autenticacao;
 
     /**
      * @throws Exception
@@ -17,13 +17,13 @@ class BasicAuthTest extends TestCase
     public function setUp()
     {
 
-        $this->basicAuth = new BasicAuth();
+        $this->autenticacao = new Autenticacao();
 
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
     public function testAuthenticationSuccessfully() {
-        $result = $this->basicAuth->authenticate('', '', '');
+        $result = $this->autenticacao->autenticar('', '', '');
         $content = $result->getContent();
 
         $this->assertNotEmpty($result);

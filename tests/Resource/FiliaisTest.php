@@ -1,25 +1,25 @@
 <?php
 
 
-use Pan\Resource\Affiliates;
+use Pan\Resource\Filiais;
 use PHPUnit\Framework\TestCase;
 
-class AffiliatesTest extends TestCase
+class FiliaisTest extends TestCase
 {
     /**
-     * @var Affiliates
+     * @var Filiais
      */
-    private $affiliates;
+    private $filiais;
 
     public function setUp()
     {
-        $this->affiliates = new Affiliates();
+        $this->filiais = new Filiais();
 
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
     public function testAffiliatesListingSuccessfully()
     {
-        $result = $this->affiliates->list('', '');
+        $result = $this->filiais->listar('', '');
         $content = $result->getContent();
 
         $this->assertNotEmpty($result);

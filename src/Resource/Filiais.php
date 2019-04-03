@@ -6,11 +6,11 @@ use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Affiliates
+ * Filiais
  *
  * @package Pan\Resource
  */
-class Affiliates
+class Filiais
 {
     /**
      * @const string
@@ -23,7 +23,7 @@ class Affiliates
     private $httpRequest;
 
     /**
-     * Affiliates constructor.
+     * Filiais constructor.
      *
      * @throws \Exception
      */
@@ -38,7 +38,7 @@ class Affiliates
      *
      * @return Response
      */
-    public function list(string $apiKey, string $accessToken) : Response
+    public function listar(string $apiKey, string $accessToken) : Response
     {
         $header = [
             'Content-type' => 'application/json',

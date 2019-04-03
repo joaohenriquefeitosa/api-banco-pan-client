@@ -1,26 +1,26 @@
 <?php
 
 
-use Pan\Resource\Organs;
+use Pan\Resource\Orgaos;
 use PHPUnit\Framework\TestCase;
 
-class OrgansTest extends TestCase
+class OrgaosTest extends TestCase
 {
     /**
-     * @var Organs
+     * @var Orgaos
      */
-    private $organs;
+    private $orgaos;
 
     public function setUp()
     {
-        $this->organs = new Organs();
+        $this->orgaos = new Orgaos();
 
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
     public function testOrgansListingSuccessfully()
     {
-        $result = $this->organs->list('', '', '');
+        $result = $this->orgaos->listar('', '', '');
         $content = $result->getContent();
 
         $this->assertNotEmpty($result);

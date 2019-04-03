@@ -1,25 +1,25 @@
 <?php
 
-use Pan\Resource\Covenants;
+use Pan\Resource\Convenios;
 use PHPUnit\Framework\TestCase;
 
 class CovenantsTest extends TestCase
 {
     /**
-     * @var Covenants
+     * @var Convenios
      */
     private $covenants;
 
     public function setUp()
     {
-        $this->covenants = new Covenants();
+        $this->covenants = new Convenios();
 
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
     public function testCovenantsListingSuccessfully()
     {
-        $result = $this->covenants->list('', '', '002711');
+        $result = $this->covenants->listar('', '', '002711');
         $content = $result->getContent();
 
         $this->assertNotEmpty($result);

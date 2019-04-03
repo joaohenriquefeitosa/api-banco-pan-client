@@ -7,11 +7,11 @@ use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * BasicAuth
+ * Autenticacao
  *
  * @package Pan\Auth
  */
-class BasicAuth
+class Autenticacao
 {
     /**
      * @const string
@@ -24,7 +24,7 @@ class BasicAuth
     private $httpRequest;
 
     /**
-     * BasicAuth constructor.
+     * Autenticacao constructor.
      *
      * @throws Exception
      */
@@ -41,7 +41,7 @@ class BasicAuth
      * @return Response
      * @throws Exception
      */
-    public function authenticate(string $username, string $password, string $apiKey) : Response
+    public function autenticar(string $username, string $password, string $apiKey) : Response
     {
         $header = [
             'Content-type' => 'application/json',

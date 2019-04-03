@@ -4,11 +4,11 @@ namespace Pan;
 
 use Exception;
 use http\Exception\InvalidArgumentException;
-use Pan\Auth\BasicAuth;
-use Pan\Resource\Affiliates;
-use Pan\Resource\Covenants;
-use Pan\Resource\Organs;
-use Pan\Resource\ReleaseMedium;
+use Pan\Auth\Autenticacao;
+use Pan\Resource\Filiais;
+use Pan\Resource\Convenios;
+use Pan\Resource\Orgaos;
+use Pan\Resource\MeioLiberacao;
 
 /**
  * Client
@@ -16,29 +16,29 @@ use Pan\Resource\ReleaseMedium;
 class Client
 {
     /**
-     * @var BasicAuth
+     * @var Autenticacao
      */
-    private $basicAuth;
+    private $autenticacao;
 
     /**
-     * @var Covenants
+     * @var Convenios
      */
-    private $covenants;
+    private $convenios;
 
     /**
-     * @var Affiliates
+     * @var Filiais
      */
-    private $affiliates;
+    private $filiais;
 
     /**
-     * @var ReleaseMedium
+     * @var MeioLiberacao
      */
-    private $releaseMedium;
+    private $meioLiberacao;
 
     /**
-     * @var Organs
+     * @var Orgaos
      */
-    private $organs;
+    private $orgaos;
 
     /**
      * @var string
@@ -59,11 +59,11 @@ class Client
      */
     public function __construct(string $apiKey)
     {
-        $this->basicAuth = new BasicAuth();
-        $this->covenants = new Covenants();
-        $this->affiliates = new Affiliates();
-        $this->releaseMedium = new ReleaseMedium();
-        $this->organs = new Organs();
+        $this->autenticacao = new Autenticacao();
+        $this->convenios = new Convenios();
+        $this->filiais = new Filiais();
+        $this->meioLiberacao = new MeioLiberacao();
+        $this->orgaos = new Orgaos();
 
         $this->apiKey = $apiKey;
     }
@@ -82,7 +82,7 @@ class Client
             throw new InvalidArgumentException("Missing Parameters");
         }
 
-        $result = $this->basicAuth->authenticate($username, $password, $this->apiKey);
+        $result = $this->autenticacao->autenticar($username, $password, $this->apiKey);
 
         $this->accessToken = $result->getContent()["access_token"];
 
@@ -105,7 +105,7 @@ class Client
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->covenants->list($this->apiKey, $this->accessToken, $promo_code);
+        $result = $this->convenios->listar($this->apiKey, $this->accessToken, $promo_code);
 
         return $result;
     }
@@ -120,7 +120,7 @@ class Client
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->affiliates->list($this->apiKey, $this->accessToken);
+        $result = $this->filiais->listar($this->apiKey, $this->accessToken);
 
         return $result;
     }
@@ -134,14 +134,14 @@ class Client
      * @return Response
      * @throws Exception
      */
-    public function meio_liberacao(string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente): Response
+    public function meioLiberacao(string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente): Response
     {
         if (empty($this->accessToken) or empty($this->apiKey)) {
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->releaseMedium
-            ->list(
+        $result = $this->meioLiberacao
+            ->listar(
                 $this->apiKey,
                 $this->accessToken,
                 $codigo_convenio,
@@ -168,7 +168,7 @@ class Client
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->organs->list($this->apiKey, $this->accessToken, $codigo_convenio);
+        $result = $this->orgaos->listar($this->apiKey, $this->accessToken, $codigo_convenio);
 
         return $result;
     }

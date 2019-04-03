@@ -8,16 +8,16 @@ use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Organs
+ * Convenios
  *
  * @package Pan\Resource
  */
-class Organs
+class Convenios
 {
     /**
      * @const string
      */
-    const ENDPOINT = '5ca497934b00002b63209c8d';
+    const ENDPOINT = '5ca397924b00004e00209720';
 
     /**
      * @var HttpRequest
@@ -25,7 +25,7 @@ class Organs
     private $httpRequest;
 
     /**
-     * Organs constructor.
+     * Convenios constructor.
      *
      * @throws \Exception
      */
@@ -37,11 +37,11 @@ class Organs
     /**
      * @param string $apiKey
      * @param string $accessToken
-     * @param string $codigo_convenio
+     * @param string $promo_code
      *
      * @return Response
      */
-    public function list(string $apiKey, string $accessToken, string $codigo_convenio) : Response
+    public function listar(string $apiKey, string $accessToken, string $promo_code) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -50,7 +50,7 @@ class Organs
         ];
 
         $params = [
-            'codigo_convenio' => $codigo_convenio
+            'codigo_promotora' => $promo_code
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
