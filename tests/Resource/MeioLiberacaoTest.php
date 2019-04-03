@@ -1,25 +1,25 @@
 <?php
 
 
-use Pan\Resource\ReleaseMedium;
+use Pan\Resource\MeioLiberacao;
 use PHPUnit\Framework\TestCase;
 
-class ReleaseMediumTest extends TestCase
+class MeioLiberacaoTest extends TestCase
 {
     /**
-     * @var ReleaseMedium
+     * @var MeioLiberacao
      */
-    private $releaseMedium;
+    private $meioLiberacao;
 
     public function setUp()
     {
-        $this->releaseMedium = new ReleaseMedium();
+        $this->meioLiberacao = new MeioLiberacao();
 
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
     public function testReleaseMediumListingSuccessfully()
     {
-        $result = $this->releaseMedium->list('', '', '', '','', '');
+        $result = $this->meioLiberacao->listar('', '', '', '','', '');
         $content = $result->getContent();
 
         $this->assertNotEmpty($result);

@@ -1,25 +1,26 @@
 <?php
 
-use Pan\Resource\Convenios;
+
+use Pan\Resource\Orgaos;
 use PHPUnit\Framework\TestCase;
 
-class CovenantsTest extends TestCase
+class OrgaosTest extends TestCase
 {
     /**
-     * @var Convenios
+     * @var Orgaos
      */
-    private $covenants;
+    private $orgaos;
 
     public function setUp()
     {
-        $this->covenants = new Convenios();
+        $this->orgaos = new Orgaos();
 
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
-    public function testCovenantsListingSuccessfully()
+    public function testOrgansListingSuccessfully()
     {
-        $result = $this->covenants->listar('', '', '002711');
+        $result = $this->orgaos->listar('', '', '');
         $content = $result->getContent();
 
         $this->assertNotEmpty($result);

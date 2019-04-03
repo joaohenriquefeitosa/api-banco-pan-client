@@ -1,21 +1,23 @@
 <?php
 
+
 namespace Pan\Resource;
+
 
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Users
+ * Orgaos
  *
  * @package Pan\Resource
  */
-class Users
+class Orgaos
 {
     /**
      * @const string
      */
-    const ENDPOINT = '5ca397924b00004e00209720';
+    const ENDPOINT = '5ca497934b00002b63209c8d';
 
     /**
      * @var HttpRequest
@@ -23,7 +25,7 @@ class Users
     private $httpRequest;
 
     /**
-     * Covenants constructor.
+     * Orgaos constructor.
      *
      * @throws \Exception
      */
@@ -33,22 +35,13 @@ class Users
     }
 
     /**
-     * @return HttpRequest
+     * @param string $apiKey
+     * @param string $accessToken
+     * @param string $codigoConvenio
+     *
+     * @return Response
      */
-    public function getHttpRequest(): HttpRequest
-    {
-        return $this->httpRequest;
-    }
-
-    /**
-     * @param HttpRequest $httpRequest
-     */
-    public function setHttpRequest(HttpRequest $httpRequest): void
-    {
-        $this->httpRequest = $httpRequest;
-    }
-
-    public function list(string $apiKey, string $accessToken, string $cpf) : Response
+    public function listar(string $apiKey, string $accessToken, string $codigoConvenio) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -57,7 +50,7 @@ class Users
         ];
 
         $params = [
-            'cpf' => $cpf
+            'codigo_convenio' => $codigoConvenio
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);

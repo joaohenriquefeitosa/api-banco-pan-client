@@ -1,9 +1,9 @@
 <?php
 
-use Pan\Resource\Users;
+use Pan\Resource\Usuarios;
 use PHPUnit\Framework\TestCase;
 
-class UsersTest extends TestCase
+class UsuariosTest extends TestCase
 {
     /**
      * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
@@ -26,10 +26,10 @@ class UsersTest extends TestCase
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $users = new Users();
+        $users = new Usuarios();
         $users->setHttpRequest($this->httpRequest);
 
-        $result = $users->list("", "", "");
+        $result = $users->listar("", "", "");
 
         $this->assertInstanceOf(\Pan\Response::class, $result);
     }

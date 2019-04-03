@@ -1,34 +1,45 @@
 <?php
 
-
 namespace Pan\Resource;
 
-
 use Pan\Http\HttpRequest;
+use Pan\Response;
 
 /**
- * ReleaseMedium
+ * Convenios
  *
  * @package Pan\Resource
  */
-class ReleaseMedium
+class Convenios
 {
     /**
      * @const string
      */
-    const ENDPOINT = '5ca3ca794b0000600020981a';
+    const ENDPOINT = '5ca397924b00004e00209720';
 
     /**
      * @var HttpRequest
      */
     private $httpRequest;
 
+    /**
+     * Convenios constructor.
+     *
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->httpRequest = new HttpRequest();
     }
 
-    public function list(string $apiKey, string $accessToken, string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente)
+    /**
+     * @param string $apiKey
+     * @param string $accessToken
+     * @param string $codigoPromotora
+     *
+     * @return Response
+     */
+    public function listar(string $apiKey, string $accessToken, string $codigoPromotora) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -37,10 +48,7 @@ class ReleaseMedium
         ];
 
         $params = [
-            'codigo_convenio' => $codigo_convenio,
-            'tipo_operacao' => $tipo_operacao,
-            'cep_cliente' => $cep_cliente,
-            'valor_cliente' => $valor_cliente
+            'codigo_promotora' => $codigoPromotora
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);

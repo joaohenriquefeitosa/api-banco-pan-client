@@ -6,16 +6,16 @@ use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Covenants
+ * Filiais
  *
  * @package Pan\Resource
  */
-class Covenants
+class Filiais
 {
     /**
      * @const string
      */
-    const ENDPOINT = '5ca397924b00004e00209720';
+    const ENDPOINT = '5ca3b0974b00004e002097bc';
 
     /**
      * @var HttpRequest
@@ -23,7 +23,7 @@ class Covenants
     private $httpRequest;
 
     /**
-     * Covenants constructor.
+     * Filiais constructor.
      *
      * @throws \Exception
      */
@@ -35,11 +35,10 @@ class Covenants
     /**
      * @param string $apiKey
      * @param string $accessToken
-     * @param string $promo_code
      *
      * @return Response
      */
-    public function list(string $apiKey, string $accessToken, string $promo_code) : Response
+    public function listar(string $apiKey, string $accessToken) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -47,11 +46,7 @@ class Covenants
             'Authorization' => 'Bearer ' . $accessToken
         ];
 
-        $params = [
-            'codigo_promotora' => $promo_code
-        ];
-
-        $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
+        $result = $this->httpRequest->get(self::ENDPOINT, $header);
 
         return $result;
     }

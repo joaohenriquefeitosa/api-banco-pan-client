@@ -32,5 +32,17 @@ $result = $client->filiais();
 ### Meio de Liberação
 Consulta os meios de liberação disponíveis.
 ```php
-$result = $client->meio_liberacao("{codigo_convenio}", "{tipo_operacao}", "{cep_cliente}", "{valor_cliente}");
+$result = $client->meioLiberacao("{codigo_convenio}", "{tipo_operacao}", "{cep_cliente}", "{valor_cliente}");
+```
+
+### Orgãos
+Consulta os orgãos disponiveis para um determinado convenio.
+```php
+$result = $client->orgaos("{codigo_convenio}");
+```
+
+### Usuários
+Retorna a lista dos usernames existentes para um determinado CPF do usuário digitador.
+```php
+$result = $client->usuarios("{cpf}");
 ```
