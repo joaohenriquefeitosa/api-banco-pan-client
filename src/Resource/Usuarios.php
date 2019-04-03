@@ -6,11 +6,11 @@ use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Convenios
+ * Usuarios
  *
  * @package Pan\Resource
  */
-class Convenios
+class Usuarios
 {
     /**
      * @const string
@@ -23,7 +23,7 @@ class Convenios
     private $httpRequest;
 
     /**
-     * Convenios constructor.
+     * Covenants constructor.
      *
      * @throws \Exception
      */
@@ -33,13 +33,22 @@ class Convenios
     }
 
     /**
-     * @param string $apiKey
-     * @param string $accessToken
-     * @param string $codigoPromotora
-     *
-     * @return Response
+     * @return HttpRequest
      */
-    public function listar(string $apiKey, string $accessToken, string $codigoPromotora) : Response
+    public function getHttpRequest(): HttpRequest
+    {
+        return $this->httpRequest;
+    }
+
+    /**
+     * @param HttpRequest $httpRequest
+     */
+    public function setHttpRequest(HttpRequest $httpRequest): void
+    {
+        $this->httpRequest = $httpRequest;
+    }
+
+    public function listar(string $apiKey, string $accessToken, string $cpf) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -48,7 +57,7 @@ class Convenios
         ];
 
         $params = [
-            'codigo_promotora' => $codigoPromotora
+            'cpf' => $cpf
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);

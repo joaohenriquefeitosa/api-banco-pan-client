@@ -5,10 +5,14 @@ namespace Pan;
 use Exception;
 use http\Exception\InvalidArgumentException;
 use Pan\Auth\Autenticacao;
-use Pan\Resource\Filiais;
+use Pan\Auth\BasicAuth;
+use Pan\Resource\Affiliates;
 use Pan\Resource\Convenios;
-use Pan\Resource\Orgaos;
+use Pan\Resource\Covenants;
+use Pan\Resource\Filiais;
 use Pan\Resource\MeioLiberacao;
+use Pan\Resource\ReleaseMedium;
+use Pan\Resource\Usuarios;
 
 /**
  * Client
@@ -36,9 +40,9 @@ class Client
     private $meioLiberacao;
 
     /**
-     * @var Orgaos
+     * @var Usuarios
      */
-    private $orgaos;
+    private $usuarios;
 
     /**
      * @var string
@@ -63,7 +67,7 @@ class Client
         $this->convenios = new Convenios();
         $this->filiais = new Filiais();
         $this->meioLiberacao = new MeioLiberacao();
-        $this->orgaos = new Orgaos();
+        $this->usuarios = new Usuarios();
 
         $this->apiKey = $apiKey;
     }
@@ -90,29 +94,26 @@ class Client
     }
 
     /**
-     * @param string $codigoPromotora
+     * @param string $promo_code
      *
      * @return Response
+     * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function convenios(string $codigoPromotora) : Response
+    public function convenios(string $promo_code) : Response
     {
-        if (empty($codigoPromotora)) {
+        if (empty($promo_code)) {
             throw new InvalidArgumentException("Missing Parameters");
         }
         if (empty($this->accessToken) or empty($this->apiKey)) {
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->convenios->listar($this->apiKey, $this->accessToken, $codigoPromotora);
+        $result = $this->convenios->listar($this->apiKey, $this->accessToken, $promo_code);
 
         return $result;
     }
 
-    /**
-     * @return Response
-     * @throws Exception
-     */
     public function filiais(): Response
     {
         if (empty($this->accessToken) or empty($this->apiKey)) {
@@ -125,15 +126,15 @@ class Client
     }
 
     /**
-     * @param string $codigoConvenio
-     * @param string $tipoOperacao
-     * @param string $cepCliente
-     * @param string $valorCliente
+     * @param string $codigo_convenio
+     * @param string $tipo_operacao
+     * @param string $cep_cliente
+     * @param string $valor_cliente
      *
      * @return Response
      * @throws Exception
      */
-    public function meioLiberacao(string $codigoConvenio, string $tipoOperacao, string $cepCliente, string $valorCliente): Response
+    public function meio_liberacao(string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente): Response
     {
         if (empty($this->accessToken) or empty($this->apiKey)) {
             throw new Exception('Need to authenticate');
@@ -143,32 +144,27 @@ class Client
             ->listar(
                 $this->apiKey,
                 $this->accessToken,
-                $codigoConvenio,
-                $tipoOperacao,
-                $cepCliente,
-                $valorCliente
+                $codigo_convenio,
+                $tipo_operacao,
+                $cep_cliente,
+                $valor_cliente
             );
 
         return $result;
     }
 
     /**
-     * @param string $codigoConvenio
+     * @param string $cpfUsuarioDigitador
      *
      * @return Response
      * @throws Exception
      */
-    public function orgaos(string $codigoConvenio) : Response
+    public function usuarios(string $cpfUsuarioDigitador)
     {
-        if (empty($codigoConvenio)) {
-            throw new InvalidArgumentException("Missing Parameters");
-        }
         if (empty($this->accessToken) or empty($this->apiKey)) {
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->orgaos->listar($this->apiKey, $this->accessToken, $codigoConvenio);
-
-        return $result;
+        return $this->usuarios->listar($this->apiKey, $this->accessToken, $cpfUsuarioDigitador);
     }
 }
