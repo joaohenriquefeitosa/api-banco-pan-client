@@ -1,5 +1,6 @@
 <?php
 
+use Pan\Auth\Credencial;
 use Pan\Resource\Usuarios;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +30,12 @@ class UsuariosTest extends TestCase
         $usuarios = new Usuarios();
         $usuarios->setHttpRequest($this->httpRequest);
 
-        $result = $usuarios->listar("", "", "");
+        $credencial = new Credencial();
+        $credencial->setApiKey('api-key');
+        $credencial->setUsername('username');
+        $credencial->setPassword('password');
+
+        $result = $usuarios->listar($credencial, ['']);
 
         $this->assertInstanceOf(\Pan\Response::class, $result);
     }

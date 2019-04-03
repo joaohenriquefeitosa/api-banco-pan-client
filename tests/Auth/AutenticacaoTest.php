@@ -2,6 +2,7 @@
 
 
 use Pan\Auth\Autenticacao;
+use Pan\Auth\Credencial;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +31,12 @@ class AutenticacaoTest extends TestCase
         $autenticacao = new Autenticacao();
         $autenticacao->setHttpRequest($this->httpRequest);
 
-        $result = $autenticacao->autenticar("", "", "");
+        $credencial = new Credencial();
+        $credencial->setApiKey('api-key');
+        $credencial->setUsername('username');
+        $credencial->setPassword('password');
+
+        $result = $autenticacao->autenticar($credencial, ['', '']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

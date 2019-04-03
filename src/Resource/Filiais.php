@@ -2,6 +2,7 @@
 
 namespace Pan\Resource;
 
+use Pan\Auth\Credencial;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
@@ -15,7 +16,7 @@ class Filiais
     /**
      * @const string
      */
-    const ENDPOINT = '5ca3b0974b00004e002097bc';
+    const ENDPOINT = 'filiais';
 
     /**
      * @var HttpRequest
@@ -49,20 +50,15 @@ class Filiais
     }
 
     /**
-     * @param string $apiKey
-     * @param string $accessToken
+     * @param Credencial $credencial
      *
      * @return Response
      */
-    public function listar(string $apiKey, string $accessToken) : Response
+    public function listar(Credencial $credencial) : Response
     {
-        $header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $accessToken
-        ];
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $header);
+        $result = $this->httpRequest->get(self::ENDPOINT);
 
         return $result;
     }

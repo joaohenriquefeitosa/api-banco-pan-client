@@ -5,13 +5,11 @@ namespace Pan;
 use Exception;
 use http\Exception\InvalidArgumentException;
 use Pan\Auth\Autenticacao;
-use Pan\Auth\BasicAuth;
-use Pan\Resource\Affiliates;
+use Pan\Auth\Credencial;
 use Pan\Resource\Convenios;
-use Pan\Resource\Covenants;
 use Pan\Resource\Filiais;
 use Pan\Resource\MeioLiberacao;
-use Pan\Resource\ReleaseMedium;
+use Pan\Resource\Proposta;
 use Pan\Resource\Usuarios;
 
 /**
@@ -45,14 +43,14 @@ class Client
     private $usuarios;
 
     /**
-     * @var string
+     * @var Proposta
      */
-    private $accessToken;
+    private $proposta;
 
     /**
-     * @var string
+     * @var Credencial
      */
-    private $apiKey;
+    private $credencial;
 
     /**
      * Client constructor.
@@ -68,103 +66,190 @@ class Client
         $this->filiais = new Filiais();
         $this->meioLiberacao = new MeioLiberacao();
         $this->usuarios = new Usuarios();
+        $this->proposta = new Proposta();
+        $this->credencial = new Credencial();
 
-        $this->apiKey = $apiKey;
+        $this->credencial->setApiKey($apiKey);
     }
 
     /**
-     * @param string $username
-     * @param string $password
+     * @param array $args
      *
      * @return Response
-     * @throws InvalidArgumentException
-     * @throws \Exception
+     * @throws Exception
      */
-    public function autenticacao(string $username, string $password) : Response
+    public function autenticacao(...$args) : Response
     {
-        if (empty($username) or empty($password) or empty($this->apiKey)) {
+        if (empty($args) or sizeof($args) != 2) {
             throw new InvalidArgumentException("Missing Parameters");
         }
 
-        $result = $this->autenticacao->autenticar($username, $password, $this->apiKey);
+        $this->credencial->setUsername($args[0]);
+        $this->credencial->setPassword($args[1]);
 
-        $this->accessToken = $result->getContent()["access_token"];
+        $result = $this->autenticacao->autenticar($this->credencial, $args);
+
+        $token = $result->getContent()["access_token"];
+
+        $this->credencial->setAccessToken($token);
 
         return $result;
     }
 
     /**
-     * @param string $promo_code
+     * @param array $args
      *
      * @return Response
-     * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function convenios(string $promo_code) : Response
+    public function convenios(...$args) : Response
     {
-        if (empty($promo_code)) {
+        if (empty($args) or sizeof($args) != 1) {
             throw new InvalidArgumentException("Missing Parameters");
         }
-        if (empty($this->accessToken) or empty($this->apiKey)) {
+        if (!$this->isAuthenticated()) {
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->convenios->listar($this->apiKey, $this->accessToken, $promo_code);
+        $result = $this->convenios->listar($this->credencial, $args);
 
         return $result;
     }
 
+    /**
+     * @return Response
+     * @throws Exception
+     */
     public function filiais(): Response
     {
-        if (empty($this->accessToken) or empty($this->apiKey)) {
+        if (!$this->isAuthenticated()) {
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->filiais->listar($this->apiKey, $this->accessToken);
+        $result = $this->filiais->listar($this->credencial);
 
         return $result;
     }
 
     /**
-     * @param string $codigo_convenio
-     * @param string $tipo_operacao
-     * @param string $cep_cliente
-     * @param string $valor_cliente
+     * @param array $args
      *
      * @return Response
      * @throws Exception
      */
-    public function meio_liberacao(string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente): Response
+    public function meioLiberacao(...$args): Response
     {
-        if (empty($this->accessToken) or empty($this->apiKey)) {
+        if (empty($args) or sizeof($args) != 4) {
+            throw new InvalidArgumentException("Missing Parameters");
+        }
+        if (!$this->isAuthenticated()) {
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->meioLiberacao
-            ->listar(
-                $this->apiKey,
-                $this->accessToken,
-                $codigo_convenio,
-                $tipo_operacao,
-                $cep_cliente,
-                $valor_cliente
-            );
+        $result = $this->meioLiberacao->listar($this->credencial, $args);
 
         return $result;
     }
 
     /**
-     * @param string $cpfUsuarioDigitador
+     * @param array $args
      *
      * @return Response
      * @throws Exception
      */
-    public function usuarios(string $cpfUsuarioDigitador)
+    public function usuarios(...$args) : Response
     {
-        if (empty($this->accessToken) or empty($this->apiKey)) {
+        if (empty($args) or sizeof($args) != 1) {
+            throw new InvalidArgumentException("Missing Parameters");
+        }
+        if (!$this->isAuthenticated()) {
             throw new Exception('Need to authenticate');
         }
 
-        return $this->usuarios->listar($this->apiKey, $this->accessToken, $cpfUsuarioDigitador);
+        $result = $this->usuarios->listar($this->credencial, $args);
+
+        return $result;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return Response
+     * @throws Exception
+     */
+    public function simularProposta(...$args)
+    {
+        if (empty($args) or sizeof($args) != 16) {
+            throw new InvalidArgumentException("Missing Parameters");
+        }
+        if (!$this->isAuthenticated()) {
+            throw new Exception('Need to authenticate');
+        }
+
+        return $this->proposta->simular($this->credencial, $args);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAuthenticated()
+    {
+        return !empty($this->credencial) and !empty($this->credencial->getAccessToken());
+    }
+
+    /**
+     * @param Credencial $credencial
+     */
+    public function setCredencial(Credencial $credencial): void
+    {
+        $this->credencial = $credencial;
+    }
+
+    /**
+     * @param Autenticacao $autenticacao
+     */
+    public function setAutenticacao(Autenticacao $autenticacao): void
+    {
+        $this->autenticacao = $autenticacao;
+    }
+
+    /**
+     * @param Convenios $convenios
+     */
+    public function setConvenios(Convenios $convenios): void
+    {
+        $this->convenios = $convenios;
+    }
+
+    /**
+     * @param Filiais $filiais
+     */
+    public function setFiliais(Filiais $filiais): void
+    {
+        $this->filiais = $filiais;
+    }
+
+    /**
+     * @param MeioLiberacao $meioLiberacao
+     */
+    public function setMeioLiberacao(MeioLiberacao $meioLiberacao): void
+    {
+        $this->meioLiberacao = $meioLiberacao;
+    }
+
+    /**
+     * @param Usuarios $usuarios
+     */
+    public function setUsuarios(Usuarios $usuarios): void
+    {
+        $this->usuarios = $usuarios;
+    }
+
+    /**
+     * @param Proposta $proposta
+     */
+    public function setProposta(Proposta $proposta): void
+    {
+        $this->proposta = $proposta;
     }
 }

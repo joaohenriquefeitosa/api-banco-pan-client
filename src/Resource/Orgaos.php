@@ -4,6 +4,7 @@
 namespace Pan\Resource;
 
 
+use Pan\Auth\Credencial;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
@@ -17,7 +18,7 @@ class Orgaos
     /**
      * @const string
      */
-    const ENDPOINT = '5ca497934b00002b63209c8d';
+    const ENDPOINT = 'orgaos';
 
     /**
      * @var HttpRequest
@@ -51,25 +52,22 @@ class Orgaos
     }
 
     /**
-     * @param string $apiKey
-     * @param string $accessToken
-     * @param string $codigoConvenio
+     * @param Credencial $credencial
+     * @param array $args
      *
      * @return Response
      */
-    public function listar(string $apiKey, string $accessToken, string $codigoConvenio) : Response
+    public function listar(Credencial $credencial, array $args) : Response
     {
-        $header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $accessToken
-        ];
+        $codigoConvenio = $args[0];
 
         $params = [
             'codigo_convenio' => $codigoConvenio
         ];
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
+
+        $result = $this->httpRequest->get(self::ENDPOINT, $params);
 
         return $result;
     }

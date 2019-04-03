@@ -1,6 +1,7 @@
 <?php
 
 
+use Pan\Auth\Credencial;
 use Pan\Resource\MeioLiberacao;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,11 @@ class MeioLiberacaoTest extends TestCase
         $meioLiberacao = new MeioLiberacao();
         $meioLiberacao->setHttpRequest($this->httpRequest);
 
-        $result = $meioLiberacao->listar("", "", "", "", "", "");
+        $credencial = new Credencial();
+        $credencial->setApiKey('api-key');
+        $credencial->setAccessToken('token');
+
+        $result = $meioLiberacao->listar($credencial, ['', '', '', '']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

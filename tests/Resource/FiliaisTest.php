@@ -1,6 +1,7 @@
 <?php
 
 
+use Pan\Auth\Credencial;
 use Pan\Resource\Filiais;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,11 @@ class FiliaisTest extends TestCase
         $filiais = new Filiais();
         $filiais->setHttpRequest($this->httpRequest);
 
-        $result = $filiais->listar("", "");
+        $credencial = new Credencial();
+        $credencial->setApiKey('api-key');
+        $credencial->setAccessToken('token');
+
+        $result = $filiais->listar($credencial, '');
 
         $this->assertInstanceOf(Response::class, $result);
     }

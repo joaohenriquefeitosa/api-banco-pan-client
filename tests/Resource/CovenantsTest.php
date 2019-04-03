@@ -1,5 +1,6 @@
 <?php
 
+use Pan\Auth\Credencial;
 use Pan\Resource\Convenios;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +31,11 @@ class CovenantsTest extends TestCase
         $convenios = new Convenios();
         $convenios->setHttpRequest($this->httpRequest);
 
-        $result = $convenios->listar("", "", "");
+        $credencial = new Credencial();
+        $credencial->setApiKey('api-key');
+        $credencial->setAccessToken('token');
+
+        $result = $convenios->listar($credencial, ['']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

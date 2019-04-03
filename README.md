@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/bevicred/api-banco-pan-client/tree/master.svg?style=svg)](https://circleci.com/gh/bevicred/api-banco-pan-client/tree/master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Client para integração com a API do banco PAN.
+Client para integração com a API Consignado do Banco PAN.
 
 ## Instalação
 
@@ -39,6 +39,27 @@ $result = $client->meioLiberacao("{codigo_convenio}", "{tipo_operacao}", "{cep_c
 Consulta os orgãos disponiveis para um determinado convenio.
 ```php
 $result = $client->orgaos("{codigo_convenio}");
+```
+
+### Proposta
+Retorna a lista de simulações.
+```php
+$result = $client->simularProposta("{codigo_usuario}",
+                                   "{codigo_filial}",
+                                   "{codigo_supervisor}",
+                                   "{codigo_promotora}",
+                                   "{codigo_convenio}",
+                                   "{cpf_cliente}",
+                                   "{matricula_preferencial_cliente}",
+                                   "{matricula_complementar_cliente}",
+                                   "{data_nascimento_cliente}",
+                                   "{renda_mensal_cliente}",
+                                   "{valor_simulacao}",
+                                   "{metodo_simulacao}",
+                                   "{prazo_simulacao}",
+                                   "{despesas_simulacao}",
+                                   "{operacoes_refinanciamento}",
+                                   "{tipo_operacao}");
 ```
 
 ### Usuários

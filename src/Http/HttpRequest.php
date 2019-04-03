@@ -3,6 +3,7 @@
 namespace Pan\Http;
 
 use Exception;
+use Pan\Auth\AuthorizationHeaderHttpEnum;
 use Pan\Response;
 
 /**
@@ -12,7 +13,12 @@ use Pan\Response;
  */
 class HttpRequest
 {
-    const API_BASE_PATH = 'http://www.mocky.io/v2/';
+    const API_BASE_PATH = 'https://sandbox.bancopan.com.br/consignado/v1/';
+
+    /**
+     * @var object
+     */
+    private $header;
 
     /**
      * HttpRequest constructor.
@@ -28,17 +34,16 @@ class HttpRequest
 
     /**
      * @param array $params
-     * @param array $header
      * @param string $endpoint
      *
      * @return Response
      */
-    public function post($endpoint, $header, $params = []) : Response
+    public function post($endpoint, $params = []) : Response
     {
         $ch = curl_init(self::API_BASE_PATH . $endpoint);
 
         curl_setopt_array($ch, [
-            CURLOPT_HTTPHEADER => $header,
+            CURLOPT_HTTPHEADER => $this->header,
             CURLOPT_POST => TRUE,
             CURLOPT_USERAGENT => "PHP SDK",
             CURLOPT_REFERER => $_SERVER['REMOTE_ADDR'],
@@ -65,12 +70,12 @@ class HttpRequest
      *
      * @return Response
      */
-    public function get($endpoint, $header, $params = []) : Response
+    public function get($endpoint, $params = []) : Response
     {
         $ch = curl_init(self::API_BASE_PATH . $endpoint);
 
         curl_setopt_array($ch, [
-            CURLOPT_HTTPHEADER => $header,
+            CURLOPT_HTTPHEADER => $this->header,
             CURLOPT_HTTPGET => TRUE,
             CURLOPT_USERAGENT => "PHP SDK",
             CURLOPT_REFERER => $_SERVER['REMOTE_ADDR'],
@@ -88,5 +93,23 @@ class HttpRequest
         curl_close($ch);
 
         return $result;
+    }
+
+    public function createHeaderAuthorizationBasic64(string $apiKey, string $username, $password)
+    {
+        $this->header = [
+            'Content-type' => 'application/json',
+            'Api-Key' => $apiKey,
+            'Authorization' => 'Basic ' . base64_encode($username . $password)
+        ];
+    }
+
+    public function createHeaderAuthorizationBearerToken(string $apiKey, string $accessToken)
+    {
+        $this->header = [
+            'Content-type' => 'application/json',
+            'Api-Key' => $apiKey,
+            'Authorization' => 'Bearer ' . $accessToken
+        ];
     }
 }

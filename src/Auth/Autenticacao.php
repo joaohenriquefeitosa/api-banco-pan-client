@@ -16,7 +16,7 @@ class Autenticacao
     /**
      * @const string
      */
-    const ENDPOINT = '5ca397284b00002e0020971d';
+    const ENDPOINT = 'autenticacao';
 
     /**
      * @var HttpRequest
@@ -50,20 +50,15 @@ class Autenticacao
     }
 
     /**
-     * @param string $username
-     * @param string $password
-     * @param string $apiKey
+     * @param Credencial $credencial
+     * @param array $args
      *
      * @return Response
-     * @throws Exception
      */
-    public function autenticar(string $username, string $password, string $apiKey) : Response
+    public function autenticar(Credencial $credencial, array $args) : Response
     {
-        $header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Basic ' . base64_encode($username . $password)
-        ];
+        $username = $args[0];
+        $password = $args[1];
 
         $params = [
             'username' => $username,
@@ -71,7 +66,9 @@ class Autenticacao
             'grant_type' => $username . $password
         ];
 
-        $result = $this->httpRequest->post(self::ENDPOINT, $header, $params);
+        $this->httpRequest->createHeaderAuthorizationBasic64($credencial->getApiKey(), $credencial->getUsername(), $credencial->getPassword());
+
+        $result = $this->httpRequest->post(self::ENDPOINT, $params);
 
         return $result;
     }

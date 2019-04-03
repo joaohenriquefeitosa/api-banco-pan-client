@@ -4,6 +4,7 @@
 namespace Pan\Resource;
 
 
+use Pan\Auth\Credencial;
 use Pan\Http\HttpRequest;
 
 /**
@@ -16,13 +17,18 @@ class MeioLiberacao
     /**
      * @const string
      */
-    const ENDPOINT = '5ca3ca794b0000600020981a';
+    const ENDPOINT = 'meio-liberacao';
 
     /**
      * @var HttpRequest
      */
     private $httpRequest;
 
+    /**
+     * MeioLiberacao constructor.
+     *
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->httpRequest = new HttpRequest();
@@ -45,22 +51,17 @@ class MeioLiberacao
     }
 
     /**
-     * @param string $apiKey
-     * @param string $accessToken
-     * @param string $codigoConvenio
-     * @param string $tipoOperacao
-     * @param string $cepCliente
-     * @param string $valorCliente
+     * @param Credencial $credencial
+     * @param array $args
      *
      * @return \Pan\Response
      */
-    public function listar(string $apiKey, string $accessToken, string $codigoConvenio, string $tipoOperacao, string $cepCliente, string $valorCliente)
+    public function listar(Credencial $credencial, array $args)
     {
-        $header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $accessToken
-        ];
+        $codigoConvenio = $args[0];
+        $tipoOperacao = $args[1];
+        $cepCliente = $args[2];
+        $valorCliente = $args[3];
 
         $params = [
             'codigo_convenio' => $codigoConvenio,
@@ -69,7 +70,9 @@ class MeioLiberacao
             'valor_cliente' => $valorCliente
         ];
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
+
+        $result = $this->httpRequest->get(self::ENDPOINT, $params);
 
         return $result;
     }

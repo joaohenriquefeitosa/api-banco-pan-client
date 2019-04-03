@@ -2,6 +2,7 @@
 
 namespace Pan\Resource;
 
+use Pan\Auth\Credencial;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
@@ -15,7 +16,7 @@ class Usuarios
     /**
      * @const string
      */
-    const ENDPOINT = '5ca397924b00004e00209720';
+    const ENDPOINT = 'usuarios';
 
     /**
      * @var HttpRequest
@@ -48,19 +49,23 @@ class Usuarios
         $this->httpRequest = $httpRequest;
     }
 
-    public function listar(string $apiKey, string $accessToken, string $cpf) : Response
+    /**
+     * @param Credencial $credencial
+     * @param array $args
+     *
+     * @return Response
+     */
+    public function listar(Credencial $credencial, array $args) : Response
     {
-        $header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $accessToken
-        ];
+        $cpf = $args[0];
 
         $params = [
             'cpf' => $cpf
         ];
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
+        $this->httpRequest->createHeaderAuthorizationBasic64($credencial->getApiKey(), $credencial->getUsername(), $credencial->getPassword());
+
+        $result = $this->httpRequest->get(self::ENDPOINT, $params);
 
         return $result;
     }

@@ -2,6 +2,7 @@
 
 namespace Pan\Resource;
 
+use Pan\Auth\Credencial;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
@@ -15,7 +16,7 @@ class Convenios
     /**
      * @const string
      */
-    const ENDPOINT = '5ca397924b00004e00209720';
+    const ENDPOINT = 'convenios';
 
     /**
      * @var HttpRequest
@@ -49,25 +50,22 @@ class Convenios
     }
 
     /**
-     * @param string $apiKey
-     * @param string $accessToken
-     * @param string $codigoPromotora
+     * @param Credencial $credencial
+     * @param array $args
      *
      * @return Response
      */
-    public function listar(string $apiKey, string $accessToken, string $codigoPromotora) : Response
+    public function listar(Credencial $credencial, array $args) : Response
     {
-        $header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $accessToken
-        ];
+        $codigoPromotora = $args[0];
 
         $params = [
             'codigo_promotora' => $codigoPromotora
         ];
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
+
+        $result = $this->httpRequest->get(self::ENDPOINT, $params);
 
         return $result;
     }

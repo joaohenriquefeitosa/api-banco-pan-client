@@ -1,6 +1,7 @@
 <?php
 
 
+use Pan\Auth\Credencial;
 use Pan\Resource\Orgaos;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,11 @@ class OrgaosTest extends TestCase
         $orgaos = new Orgaos();
         $orgaos->setHttpRequest($this->httpRequest);
 
-        $result = $orgaos->listar("", "", "");
+        $credencial = new Credencial();
+        $credencial->setApiKey('api-key');
+        $credencial->setAccessToken('token');
+
+        $result = $orgaos->listar($credencial, ['']);
 
         $this->assertInstanceOf(Response::class, $result);
     }
