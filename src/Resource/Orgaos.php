@@ -37,11 +37,11 @@ class Orgaos
     /**
      * @param string $apiKey
      * @param string $accessToken
-     * @param string $codigo_convenio
+     * @param string $codigoConvenio
      *
      * @return Response
      */
-    public function listar(string $apiKey, string $accessToken, string $codigo_convenio) : Response
+    public function listar(string $apiKey, string $accessToken, string $codigoConvenio) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -50,7 +50,7 @@ class Orgaos
         ];
 
         $params = [
-            'codigo_convenio' => $codigo_convenio
+            'codigo_convenio' => $codigoConvenio
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);

@@ -37,11 +37,11 @@ class Convenios
     /**
      * @param string $apiKey
      * @param string $accessToken
-     * @param string $promo_code
+     * @param string $codigoPromotora
      *
      * @return Response
      */
-    public function listar(string $apiKey, string $accessToken, string $promo_code) : Response
+    public function listar(string $apiKey, string $accessToken, string $codigoPromotora) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -50,7 +50,7 @@ class Convenios
         ];
 
         $params = [
-            'codigo_promotora' => $promo_code
+            'codigo_promotora' => $codigoPromotora
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);

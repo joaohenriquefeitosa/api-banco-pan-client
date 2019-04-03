@@ -28,7 +28,17 @@ class MeioLiberacao
         $this->httpRequest = new HttpRequest();
     }
 
-    public function listar(string $apiKey, string $accessToken, string $codigo_convenio, string $tipo_operacao, string $cep_cliente, string $valor_cliente)
+    /**
+     * @param string $apiKey
+     * @param string $accessToken
+     * @param string $codigoConvenio
+     * @param string $tipoOperacao
+     * @param string $cepCliente
+     * @param string $valorCliente
+     *
+     * @return \Pan\Response
+     */
+    public function listar(string $apiKey, string $accessToken, string $codigoConvenio, string $tipoOperacao, string $cepCliente, string $valorCliente)
     {
         $header = [
             'Content-type' => 'application/json',
@@ -37,10 +47,10 @@ class MeioLiberacao
         ];
 
         $params = [
-            'codigo_convenio' => $codigo_convenio,
-            'tipo_operacao' => $tipo_operacao,
-            'cep_cliente' => $cep_cliente,
-            'valor_cliente' => $valor_cliente
+            'codigo_convenio' => $codigoConvenio,
+            'tipo_operacao' => $tipoOperacao,
+            'cep_cliente' => $cepCliente,
+            'valor_cliente' => $valorCliente
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
