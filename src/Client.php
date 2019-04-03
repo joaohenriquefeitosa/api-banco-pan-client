@@ -90,21 +90,21 @@ class Client
     }
 
     /**
-     * @param string $promoCode
+     * @param string $codigoPromotora
      *
      * @return Response
      * @throws Exception
      */
-    public function convenios(string $promoCode) : Response
+    public function convenios(string $codigoPromotora) : Response
     {
-        if (empty($promoCode)) {
+        if (empty($codigoPromotora)) {
             throw new InvalidArgumentException("Missing Parameters");
         }
         if (empty($this->accessToken) or empty($this->apiKey)) {
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->convenios->listar($this->apiKey, $this->accessToken, $promoCode);
+        $result = $this->convenios->listar($this->apiKey, $this->accessToken, $codigoPromotora);
 
         return $result;
     }
