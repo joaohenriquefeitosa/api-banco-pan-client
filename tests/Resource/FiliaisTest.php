@@ -2,28 +2,37 @@
 
 
 use Pan\Resource\Filiais;
+use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
 class FiliaisTest extends TestCase
 {
     /**
-     * @var Filiais
+     * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
      */
-    private $filiais;
+    private $httpRequest;
 
     public function setUp()
     {
-        $this->filiais = new Filiais();
+        $this->httpRequest = $this
+            ->getMockBuilder(\Pan\Http\HttpRequest::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $this->httpRequest
+            ->method('get')
+            ->willReturn(new Response());
     }
-    public function testAffiliatesListingSuccessfully()
-    {
-        $result = $this->filiais->listar('', '');
-        $content = $result->getContent();
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals(200, $result->getStatusCode());
-        $this->assertIsArray($content);
+    public function testListShouldReturnResultObject()
+    {
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        $filiais = new Filiais();
+        $filiais->setHttpRequest($this->httpRequest);
+
+        $result = $filiais->listar("", "");
+
+        $this->assertInstanceOf(Response::class, $result);
     }
 }

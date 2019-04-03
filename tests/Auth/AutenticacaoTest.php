@@ -2,32 +2,36 @@
 
 
 use Pan\Auth\Autenticacao;
+use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
 class AutenticacaoTest extends TestCase
 {
     /**
-     * @var Autenticacao
+     * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
      */
-    private $autenticacao;
+    private $httpRequest;
 
-    /**
-     * @throws Exception
-     */
     public function setUp()
     {
+        $this->httpRequest = $this
+            ->getMockBuilder(\Pan\Http\HttpRequest::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->autenticacao = new Autenticacao();
-
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $this->httpRequest
+            ->method('post')
+            ->willReturn(new Response());
     }
 
     public function testAuthenticationSuccessfully() {
-        $result = $this->autenticacao->autenticar('', '', '');
-        $content = $result->getContent();
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $this->assertNotEmpty($result);
-        $this->assertArrayHasKey("access_token", $content);
-        $this->assertArrayHasKey("data_hora_expiracao", $content);
+        $autenticacao = new Autenticacao();
+        $autenticacao->setHttpRequest($this->httpRequest);
+
+        $result = $autenticacao->autenticar("", "", "");
+
+        $this->assertInstanceOf(Response::class, $result);
     }
 }

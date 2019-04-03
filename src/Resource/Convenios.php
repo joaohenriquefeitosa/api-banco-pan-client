@@ -33,6 +33,22 @@ class Convenios
     }
 
     /**
+     * @return HttpRequest
+     */
+    public function getHttpRequest(): HttpRequest
+    {
+        return $this->httpRequest;
+    }
+
+    /**
+     * @param HttpRequest $httpRequest
+     */
+    public function setHttpRequest(HttpRequest $httpRequest)
+    {
+        $this->httpRequest = $httpRequest;
+    }
+
+    /**
      * @param string $apiKey
      * @param string $accessToken
      * @param string $codigoPromotora

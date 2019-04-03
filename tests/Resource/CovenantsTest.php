@@ -1,29 +1,37 @@
 <?php
 
 use Pan\Resource\Convenios;
+use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
 class CovenantsTest extends TestCase
 {
     /**
-     * @var Convenios
+     * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
      */
-    private $covenants;
+    private $httpRequest;
 
     public function setUp()
     {
-        $this->covenants = new Convenios();
+        $this->httpRequest = $this
+            ->getMockBuilder(\Pan\Http\HttpRequest::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $this->httpRequest
+            ->method('get')
+            ->willReturn(new Response());
     }
 
-    public function testCovenantsListingSuccessfully()
+    public function testListShouldReturnResultObject()
     {
-        $result = $this->covenants->listar('', '', '002711');
-        $content = $result->getContent();
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals(200, $result->getStatusCode());
-        $this->assertIsArray($content);
+        $convenios = new Convenios();
+        $convenios->setHttpRequest($this->httpRequest);
+
+        $result = $convenios->listar("", "", "");
+
+        $this->assertInstanceOf(Response::class, $result);
     }
 }
