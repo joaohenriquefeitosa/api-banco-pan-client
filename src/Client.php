@@ -8,6 +8,7 @@ use Pan\Auth\BasicAuth;
 use Pan\Resource\Affiliates;
 use Pan\Resource\Covenants;
 use Pan\Resource\ReleaseMedium;
+use Pan\Resource\Users;
 
 /**
  * Client
@@ -35,6 +36,11 @@ class Client
     private $releaseMedium;
 
     /**
+     * @var Users
+     */
+    private $users;
+
+    /**
      * @var string
      */
     private $accessToken;
@@ -57,6 +63,7 @@ class Client
         $this->covenants = new Covenants();
         $this->affiliates = new Affiliates();
         $this->releaseMedium = new ReleaseMedium();
+        $this->users = new Users();
 
         $this->apiKey = $apiKey;
     }
@@ -140,5 +147,20 @@ class Client
             );
 
         return $result;
+    }
+
+    /**
+     * @param string $cpfUsuarioDigitador
+     *
+     * @return Response
+     * @throws Exception
+     */
+    public function usuarios(string $cpfUsuarioDigitador)
+    {
+        if (empty($this->accessToken) or empty($this->apiKey)) {
+            throw new Exception('Need to authenticate');
+        }
+
+        return $this->users->list($this->apiKey, $this->accessToken, $cpfUsuarioDigitador);
     }
 }

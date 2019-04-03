@@ -6,11 +6,11 @@ use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Covenants
+ * Users
  *
  * @package Pan\Resource
  */
-class Covenants
+class Users
 {
     /**
      * @const string
@@ -33,13 +33,22 @@ class Covenants
     }
 
     /**
-     * @param string $apiKey
-     * @param string $accessToken
-     * @param string $promo_code
-     *
-     * @return Response
+     * @return HttpRequest
      */
-    public function list(string $apiKey, string $accessToken, string $promo_code) : Response
+    public function getHttpRequest(): HttpRequest
+    {
+        return $this->httpRequest;
+    }
+
+    /**
+     * @param HttpRequest $httpRequest
+     */
+    public function setHttpRequest(HttpRequest $httpRequest): void
+    {
+        $this->httpRequest = $httpRequest;
+    }
+
+    public function list(string $apiKey, string $accessToken, string $cpf) : Response
     {
         $header = [
             'Content-type' => 'application/json',
@@ -48,7 +57,7 @@ class Covenants
         ];
 
         $params = [
-            'codigo_promotora' => $promo_code
+            'cpf' => $cpf
         ];
 
         $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
