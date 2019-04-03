@@ -7,6 +7,7 @@ use http\Exception\InvalidArgumentException;
 use Pan\Auth\BasicAuth;
 use Pan\Resource\Affiliates;
 use Pan\Resource\Covenants;
+use Pan\Resource\Organs;
 use Pan\Resource\ReleaseMedium;
 
 /**
@@ -35,6 +36,11 @@ class Client
     private $releaseMedium;
 
     /**
+     * @var Organs
+     */
+    private $organs;
+
+    /**
      * @var string
      */
     private $accessToken;
@@ -57,6 +63,7 @@ class Client
         $this->covenants = new Covenants();
         $this->affiliates = new Affiliates();
         $this->releaseMedium = new ReleaseMedium();
+        $this->organs = new Organs();
 
         $this->apiKey = $apiKey;
     }
@@ -103,6 +110,10 @@ class Client
         return $result;
     }
 
+    /**
+     * @return Response
+     * @throws Exception
+     */
     public function filiais(): Response
     {
         if (empty($this->accessToken) or empty($this->apiKey)) {
@@ -138,6 +149,26 @@ class Client
                 $cep_cliente,
                 $valor_cliente
             );
+
+        return $result;
+    }
+
+    /**
+     * @param string $codigo_convenio
+     *
+     * @return Response
+     * @throws Exception
+     */
+    public function orgaos(string $codigo_convenio) : Response
+    {
+        if (empty($codigo_convenio)) {
+            throw new InvalidArgumentException("Missing Parameters");
+        }
+        if (empty($this->accessToken) or empty($this->apiKey)) {
+            throw new Exception('Need to authenticate');
+        }
+
+        $result = $this->organs->list($this->apiKey, $this->accessToken, $codigo_convenio);
 
         return $result;
     }

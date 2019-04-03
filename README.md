@@ -34,3 +34,9 @@ Consulta os meios de liberação disponíveis.
 ```php
 $result = $client->meio_liberacao("{codigo_convenio}", "{tipo_operacao}", "{cep_cliente}", "{valor_cliente}");
 ```
+
+### Orgãos
+Consulta os orgãos disponiveis para um determinado convenio.
+```php
+$result = $client->orgaos("{codigo_convenio}");
+```
