@@ -23,7 +23,7 @@ class Affiliates
     private $httpRequest;
 
     /**
-     * Covenants constructor.
+     * Affiliates constructor.
      *
      * @throws \Exception
      */
