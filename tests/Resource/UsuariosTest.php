@@ -26,10 +26,10 @@ class UsuariosTest extends TestCase
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $users = new Usuarios();
-        $users->setHttpRequest($this->httpRequest);
+        $usuarios = new Usuarios();
+        $usuarios->setHttpRequest($this->httpRequest);
 
-        $result = $users->listar("", "", "");
+        $result = $usuarios->listar("", "", "");
 
         $this->assertInstanceOf(\Pan\Response::class, $result);
     }

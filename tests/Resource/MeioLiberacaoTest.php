@@ -2,28 +2,37 @@
 
 
 use Pan\Resource\MeioLiberacao;
+use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
 class MeioLiberacaoTest extends TestCase
 {
     /**
-     * @var MeioLiberacao
+     * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
      */
-    private $meioLiberacao;
+    private $httpRequest;
 
     public function setUp()
     {
-        $this->meioLiberacao = new MeioLiberacao();
+        $this->httpRequest = $this
+            ->getMockBuilder(\Pan\Http\HttpRequest::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $this->httpRequest
+            ->method('get')
+            ->willReturn(new Response());
     }
-    public function testReleaseMediumListingSuccessfully()
-    {
-        $result = $this->meioLiberacao->listar('', '', '', '','', '');
-        $content = $result->getContent();
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals(200, $result->getStatusCode());
-        $this->assertIsArray($content);
+    public function testListShouldReturnResultObject()
+    {
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        $meioLiberacao = new MeioLiberacao();
+        $meioLiberacao->setHttpRequest($this->httpRequest);
+
+        $result = $meioLiberacao->listar("", "", "", "", "", "");
+
+        $this->assertInstanceOf(Response::class, $result);
     }
 }
