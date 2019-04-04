@@ -2,21 +2,21 @@
 
 namespace Pan\Resource;
 
-use Pan\Auth\Credencial;
+use Pan\Auth\Credential;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Convenios
+ * Users
  *
  * @package Pan\Resource
  */
-class Convenios
+class Users
 {
     /**
      * @const string
      */
-    const ENDPOINT = 'convenios';
+    const ENDPOINT = 'usuarios';
 
     /**
      * @var HttpRequest
@@ -24,7 +24,7 @@ class Convenios
     private $httpRequest;
 
     /**
-     * Convenios constructor.
+     * Covenants constructor.
      *
      * @throws \Exception
      */
@@ -44,26 +44,26 @@ class Convenios
     /**
      * @param HttpRequest $httpRequest
      */
-    public function setHttpRequest(HttpRequest $httpRequest)
+    public function setHttpRequest(HttpRequest $httpRequest): void
     {
         $this->httpRequest = $httpRequest;
     }
 
     /**
-     * @param Credencial $credencial
+     * @param Credential $credential
      * @param array $args
      *
      * @return Response
      */
-    public function listar(Credencial $credencial, array $args) : Response
+    public function list(Credential $credential, array $args) : Response
     {
-        $codigoPromotora = $args[0];
+        $cpf = $args[0];
 
         $params = [
-            'codigo_promotora' => $codigoPromotora
+            'cpf' => $cpf
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
+        $this->httpRequest->createHeaderAuthorizationBasic64($credential->getApiKey(), $credential->getUsername(), $credential->getPassword());
 
         $result = $this->httpRequest->get(self::ENDPOINT, $params);
 

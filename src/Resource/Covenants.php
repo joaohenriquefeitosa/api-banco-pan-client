@@ -1,22 +1,22 @@
 <?php
 
-namespace Pan\Auth;
+namespace Pan\Resource;
 
-use Exception;
+use Pan\Auth\Credential;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Autenticacao
+ * Covenants
  *
- * @package Pan\Auth
+ * @package Pan\Resource
  */
-class Autenticacao
+class Covenants
 {
     /**
      * @const string
      */
-    const ENDPOINT = 'autenticacao';
+    const ENDPOINT = 'convenios';
 
     /**
      * @var HttpRequest
@@ -24,9 +24,9 @@ class Autenticacao
     private $httpRequest;
 
     /**
-     * Autenticacao constructor.
+     * Covenants constructor.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -50,25 +50,22 @@ class Autenticacao
     }
 
     /**
-     * @param Credencial $credencial
+     * @param Credential $credential
      * @param array $args
      *
      * @return Response
      */
-    public function autenticar(Credencial $credencial, array $args) : Response
+    public function list(Credential $credential, array $args) : Response
     {
-        $username = $args[0];
-        $password = $args[1];
+        $promoterCode = $args[0];
 
         $params = [
-            'username' => $username,
-            'password' => $password,
-            'grant_type' => $username . $password
+            'codigo_promotora' => $promoterCode
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBasic64($credencial->getApiKey(), $credencial->getUsername(), $credencial->getPassword());
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credential->getApiKey(), $credential->getAccessToken());
 
-        $result = $this->httpRequest->post(self::ENDPOINT, $params);
+        $result = $this->httpRequest->get(self::ENDPOINT, $params);
 
         return $result;
     }

@@ -1,14 +1,15 @@
 <?php
 
 
-use Pan\Auth\Autenticacao;
-use Pan\Auth\Credencial;
+use Pan\Auth\Authentication;
+use Pan\Auth\Credential;
 use Pan\Client;
-use Pan\Resource\Convenios;
-use Pan\Resource\Filiais;
-use Pan\Resource\MeioLiberacao;
-use Pan\Resource\Proposta;
-use Pan\Resource\Usuarios;
+use Pan\Resource\Covenants;
+use Pan\Resource\InstitutionalAffiliates;
+use Pan\Resource\InstitutionalBodies;
+use Pan\Resource\ReleaseMedium;
+use Pan\Resource\Proposal;
+use Pan\Resource\Users;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -25,19 +26,18 @@ class ClientTest extends TestCase
 
         $this->client = new Client('Api-Key');
 
-        $credencial = new Credencial();
-        $credencial->setApiKey('api-key');
-        $credencial->setUsername('username');
-        $credencial->setPassword('password');
-        $credencial->setAccessToken('token');
+        $credential = new Credential('Api-Key');
+        $credential->setUsername('username');
+        $credential->setPassword('password');
+        $credential->setAccessToken('token');
 
-        $this->client->setCredencial($credencial);
+        $this->client->setCredential($credential);
     }
 
-    public function testAutenticacaoShouldReturnResultObject()
+    public function testAuthenticationShouldReturnResultObject()
     {
-        $autenticacao = $this
-            ->getMockBuilder(Autenticacao::class)
+        $authentication = $this
+            ->getMockBuilder(Authentication::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -46,97 +46,114 @@ class ClientTest extends TestCase
            'access_token' => 'token'
         ]);
 
-        $autenticacao
-            ->method('autenticar')
+        $authentication
+            ->method('authenticate')
             ->willReturn($response);
 
-        $this->client->setAutenticacao($autenticacao);
-        $result = $this->client->autenticacao('','');
+        $this->client->setAuthentication($authentication);
+        $result = $this->client->authenticate('','');
 
         $this->assertInstanceOf(Response::class, $result);
     }
 
-    public function testConveniosShouldReturnResultObject()
+    public function testCovenantsShouldReturnResultObject()
     {
-        $convenios = $this
-            ->getMockBuilder(Convenios::class)
+        $covenants = $this
+            ->getMockBuilder(Covenants::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $convenios
-            ->method('listar')
+        $covenants
+            ->method('list')
             ->willReturn(new Response());
 
-        $this->client->setConvenios($convenios);
-        $result = $this->client->convenios('');
+        $this->client->setCovenants($covenants);
+        $result = $this->client->covenants('');
 
         $this->assertInstanceOf(Response::class, $result);
     }
 
-    public function testFiliaisShouldReturnResultObject()
+    public function testInstitutionalAffiliatesShouldReturnResultObject()
     {
-        $filiais = $this
-            ->getMockBuilder(Filiais::class)
+        $institutionalAffiliates = $this
+            ->getMockBuilder(InstitutionalAffiliates::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $filiais
-            ->method('listar')
+        $institutionalAffiliates
+            ->method('list')
             ->willReturn(new Response());
 
-        $this->client->setFiliais($filiais);
-        $result = $this->client->filiais();
+        $this->client->setInstitutionalAffiliates($institutionalAffiliates);
+        $result = $this->client->institutionalAffiliates();
 
         $this->assertInstanceOf(Response::class, $result);
     }
 
-    public function testMeioLiberacaoShouldReturnResultObject()
+    public function testInstitutionalBodiesShouldReturnResultObject()
     {
-        $meioLiberacao = $this
-            ->getMockBuilder(MeioLiberacao::class)
+        $institutionalBodies = $this
+            ->getMockBuilder(InstitutionalBodies::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $meioLiberacao
-            ->method('listar')
+        $institutionalBodies
+            ->method('list')
             ->willReturn(new Response());
 
-        $this->client->setMeioLiberacao($meioLiberacao);
-        $result = $this->client->meioLiberacao('','','','');
+        $this->client->setInstitutionalBodies($institutionalBodies);
+        $result = $this->client->institutionalBodies(['']);
 
         $this->assertInstanceOf(Response::class, $result);
     }
 
-    public function testUsuariosShouldReturnResultObject()
+    public function testReleaseMediumShouldReturnResultObject()
     {
-        $usuarios = $this
-            ->getMockBuilder(Usuarios::class)
+        $releaseMedium = $this
+            ->getMockBuilder(ReleaseMedium::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $usuarios
-            ->method('listar')
+        $releaseMedium
+            ->method('list')
             ->willReturn(new Response());
 
-        $this->client->setUsuarios($usuarios);
-        $result = $this->client->usuarios('');
+        $this->client->setReleaseMedium($releaseMedium);
+        $result = $this->client->releaseMedium('','','','');
 
         $this->assertInstanceOf(Response::class, $result);
     }
 
-    public function testSimularPropostaShouldReturnResultObject()
+    public function testUsersShouldReturnResultObject()
     {
-        $proposta = $this
-            ->getMockBuilder(Proposta::class)
+        $users = $this
+            ->getMockBuilder(Users::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $proposta
-            ->method('simular')
+        $users
+            ->method('list')
             ->willReturn(new Response());
 
-        $this->client->setProposta($proposta);
-        $result = $this->client->simularProposta('','','','','','','','','','','','','','','','');
+        $this->client->setUsers($users);
+        $result = $this->client->users('');
+
+        $this->assertInstanceOf(Response::class, $result);
+    }
+
+    public function testSimulateProposalShouldReturnResultObject()
+    {
+        $proposal = $this
+            ->getMockBuilder(Proposal::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $proposal
+            ->method('simulate')
+            ->willReturn(new Response());
+
+        $this->client->setProposal($proposal);
+        $result = $this->client->simulateProposal('','','','','','','','','','','','','','','','');
 
         $this->assertInstanceOf(Response::class, $result);
     }

@@ -4,13 +4,14 @@ namespace Pan;
 
 use Exception;
 use http\Exception\InvalidArgumentException;
-use Pan\Auth\Autenticacao;
-use Pan\Auth\Credencial;
-use Pan\Resource\Convenios;
-use Pan\Resource\Filiais;
-use Pan\Resource\MeioLiberacao;
-use Pan\Resource\Proposta;
-use Pan\Resource\Usuarios;
+use Pan\Auth\Authentication;
+use Pan\Auth\Credential;
+use Pan\Resource\Covenants;
+use Pan\Resource\InstitutionalAffiliates;
+use Pan\Resource\InstitutionalBodies;
+use Pan\Resource\ReleaseMedium;
+use Pan\Resource\Proposal;
+use Pan\Resource\Users;
 
 /**
  * Client
@@ -18,39 +19,44 @@ use Pan\Resource\Usuarios;
 class Client
 {
     /**
-     * @var Autenticacao
+     * @var Authentication
      */
-    private $autenticacao;
+    private $authentication;
 
     /**
-     * @var Convenios
+     * @var Covenants
      */
-    private $convenios;
+    private $covenants;
 
     /**
-     * @var Filiais
+     * @var InstitutionalAffiliates
      */
-    private $filiais;
+    private $institutionalAffiliates;
 
     /**
-     * @var MeioLiberacao
+     * @var InstitutionalBodies
      */
-    private $meioLiberacao;
+    private $institutionalBodies;
 
     /**
-     * @var Usuarios
+     * @var ReleaseMedium
      */
-    private $usuarios;
+    private $releaseMedium;
 
     /**
-     * @var Proposta
+     * @var Users
      */
-    private $proposta;
+    private $users;
 
     /**
-     * @var Credencial
+     * @var Proposal
      */
-    private $credencial;
+    private $proposal;
+
+    /**
+     * @var Credential
+     */
+    private $credential;
 
     /**
      * Client constructor.
@@ -61,15 +67,14 @@ class Client
      */
     public function __construct(string $apiKey)
     {
-        $this->autenticacao = new Autenticacao();
-        $this->convenios = new Convenios();
-        $this->filiais = new Filiais();
-        $this->meioLiberacao = new MeioLiberacao();
-        $this->usuarios = new Usuarios();
-        $this->proposta = new Proposta();
-        $this->credencial = new Credencial();
-
-        $this->credencial->setApiKey($apiKey);
+        $this->authentication = new Authentication();
+        $this->covenants = new Covenants();
+        $this->institutionalAffiliates = new InstitutionalAffiliates();
+        $this->institutionalBodies = new InstitutionalBodies();
+        $this->releaseMedium = new ReleaseMedium();
+        $this->users = new Users();
+        $this->proposal = new Proposal();
+        $this->credential = new Credential($apiKey);
     }
 
     /**
@@ -78,20 +83,20 @@ class Client
      * @return Response
      * @throws Exception
      */
-    public function autenticacao(...$args) : Response
+    public function authenticate(...$args) : Response
     {
         if (empty($args) or sizeof($args) != 2) {
             throw new InvalidArgumentException("Missing Parameters");
         }
 
-        $this->credencial->setUsername($args[0]);
-        $this->credencial->setPassword($args[1]);
+        $this->credential->setUsername($args[0]);
+        $this->credential->setPassword($args[1]);
 
-        $result = $this->autenticacao->autenticar($this->credencial, $args);
+        $result = $this->authentication->authenticate($this->credential, $args);
 
         $token = $result->getContent()["access_token"];
 
-        $this->credencial->setAccessToken($token);
+        $this->credential->setAccessToken($token);
 
         return $result;
     }
@@ -102,7 +107,7 @@ class Client
      * @return Response
      * @throws Exception
      */
-    public function convenios(...$args) : Response
+    public function covenants(...$args) : Response
     {
         if (empty($args) or sizeof($args) != 1) {
             throw new InvalidArgumentException("Missing Parameters");
@@ -111,7 +116,7 @@ class Client
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->convenios->listar($this->credencial, $args);
+        $result = $this->covenants->list($this->credential, $args);
 
         return $result;
     }
@@ -120,13 +125,13 @@ class Client
      * @return Response
      * @throws Exception
      */
-    public function filiais(): Response
+    public function institutionalAffiliates(): Response
     {
         if (!$this->isAuthenticated()) {
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->filiais->listar($this->credencial);
+        $result = $this->institutionalAffiliates->list($this->credential);
 
         return $result;
     }
@@ -137,7 +142,27 @@ class Client
      * @return Response
      * @throws Exception
      */
-    public function meioLiberacao(...$args): Response
+    public function institutionalBodies(...$args): Response
+    {
+        if (empty($args) or sizeof($args) != 1) {
+            throw new InvalidArgumentException("Missing Parameters");
+        }
+        if (!$this->isAuthenticated()) {
+            throw new Exception('Need to authenticate');
+        }
+
+        $result = $this->institutionalBodies->list($this->credential, $args);
+
+        return $result;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return Response
+     * @throws Exception
+     */
+    public function releaseMedium(...$args): Response
     {
         if (empty($args) or sizeof($args) != 4) {
             throw new InvalidArgumentException("Missing Parameters");
@@ -146,7 +171,7 @@ class Client
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->meioLiberacao->listar($this->credencial, $args);
+        $result = $this->releaseMedium->list($this->credential, $args);
 
         return $result;
     }
@@ -157,7 +182,7 @@ class Client
      * @return Response
      * @throws Exception
      */
-    public function usuarios(...$args) : Response
+    public function users(...$args) : Response
     {
         if (empty($args) or sizeof($args) != 1) {
             throw new InvalidArgumentException("Missing Parameters");
@@ -166,7 +191,7 @@ class Client
             throw new Exception('Need to authenticate');
         }
 
-        $result = $this->usuarios->listar($this->credencial, $args);
+        $result = $this->users->list($this->credential, $args);
 
         return $result;
     }
@@ -177,7 +202,7 @@ class Client
      * @return Response
      * @throws Exception
      */
-    public function simularProposta(...$args)
+    public function simulateProposal(...$args) : Response
     {
         if (empty($args) or sizeof($args) != 16) {
             throw new InvalidArgumentException("Missing Parameters");
@@ -186,7 +211,7 @@ class Client
             throw new Exception('Need to authenticate');
         }
 
-        return $this->proposta->simular($this->credencial, $args);
+        return $this->proposal->simulate($this->credential, $args);
     }
 
     /**
@@ -194,62 +219,70 @@ class Client
      */
     private function isAuthenticated()
     {
-        return !empty($this->credencial) and !empty($this->credencial->getAccessToken());
+        return !empty($this->credential) and !empty($this->credential->getAccessToken());
     }
 
     /**
-     * @param Credencial $credencial
+     * @param Authentication $authentication
      */
-    public function setCredencial(Credencial $credencial): void
+    public function setAuthentication(Authentication $authentication): void
     {
-        $this->credencial = $credencial;
+        $this->authentication = $authentication;
     }
 
     /**
-     * @param Autenticacao $autenticacao
+     * @param Covenants $covenants
      */
-    public function setAutenticacao(Autenticacao $autenticacao): void
+    public function setCovenants(Covenants $covenants): void
     {
-        $this->autenticacao = $autenticacao;
+        $this->covenants = $covenants;
     }
 
     /**
-     * @param Convenios $convenios
+     * @param InstitutionalAffiliates $institutionalAffiliates
      */
-    public function setConvenios(Convenios $convenios): void
+    public function setInstitutionalAffiliates(InstitutionalAffiliates $institutionalAffiliates): void
     {
-        $this->convenios = $convenios;
+        $this->institutionalAffiliates = $institutionalAffiliates;
     }
 
     /**
-     * @param Filiais $filiais
+     * @param InstitutionalBodies $institutionalBodies
      */
-    public function setFiliais(Filiais $filiais): void
+    public function setInstitutionalBodies(InstitutionalBodies $institutionalBodies): void
     {
-        $this->filiais = $filiais;
+        $this->institutionalBodies = $institutionalBodies;
     }
 
     /**
-     * @param MeioLiberacao $meioLiberacao
+     * @param ReleaseMedium $releaseMedium
      */
-    public function setMeioLiberacao(MeioLiberacao $meioLiberacao): void
+    public function setReleaseMedium(ReleaseMedium $releaseMedium): void
     {
-        $this->meioLiberacao = $meioLiberacao;
+        $this->releaseMedium = $releaseMedium;
     }
 
     /**
-     * @param Usuarios $usuarios
+     * @param Users $users
      */
-    public function setUsuarios(Usuarios $usuarios): void
+    public function setUsers(Users $users): void
     {
-        $this->usuarios = $usuarios;
+        $this->users = $users;
     }
 
     /**
-     * @param Proposta $proposta
+     * @param Proposal $proposal
      */
-    public function setProposta(Proposta $proposta): void
+    public function setProposal(Proposal $proposal): void
     {
-        $this->proposta = $proposta;
+        $this->proposal = $proposal;
+    }
+
+    /**
+     * @param Credential $credential
+     */
+    public function setCredential(Credential $credential): void
+    {
+        $this->credential = $credential;
     }
 }

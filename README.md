@@ -16,35 +16,35 @@ composer require bevicred-digital/api-banco-pan-client
 ### Autenticação
 ```php
 $client = new Client("{Api-Key}");  
-$client->autenticacao("{username}", "{password}");
+$client->authenticate("{username}", "{password}");
 ```
 ### Convênios
 Retorna uma lista com os convênios habilitados.
 ```php
-$result = $client->convenios("{codigo_promotora}");
+$result = $client->covenants("{codigo_promotora}");
 ```
 ### Filiais
 Retorna a lista de filiais e sua promotora relacionada os quais o usuário está habilitado a realizar operações.
 ```php
-$result = $client->filiais();
+$result = $client->institutionalAffiliates();
 ```
 
 ### Meio de Liberação
 Consulta os meios de liberação disponíveis.
 ```php
-$result = $client->meioLiberacao("{codigo_convenio}", "{tipo_operacao}", "{cep_cliente}", "{valor_cliente}");
+$result = $client->releaseMedium("{codigo_convenio}", "{tipo_operacao}", "{cep_cliente}", "{valor_cliente}");
 ```
 
 ### Orgãos
 Consulta os orgãos disponiveis para um determinado convenio.
 ```php
-$result = $client->orgaos("{codigo_convenio}");
+$result = $client->institutionalBodies("{codigo_convenio}");
 ```
 
 ### Proposta
 Retorna a lista de simulações.
 ```php
-$result = $client->simularProposta("{codigo_usuario}",
+$result = $client->simulateProposal("{codigo_usuario}",
                                    "{codigo_filial}",
                                    "{codigo_supervisor}",
                                    "{codigo_promotora}",
@@ -65,5 +65,5 @@ $result = $client->simularProposta("{codigo_usuario}",
 ### Usuários
 Retorna a lista dos usernames existentes para um determinado CPF do usuário digitador.
 ```php
-$result = $client->usuarios("{cpf}");
+$result = $client->users("{cpf}");
 ```

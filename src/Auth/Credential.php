@@ -5,11 +5,11 @@ namespace Pan\Auth;
 
 
 /**
- * Credencial
+ * Credential
  *
  * @package Pan\Auth
  */
-class Credencial
+class Credential
 {
     /**
      * @var string
@@ -30,6 +30,11 @@ class Credencial
      * @var string
      */
     private $password;
+
+    public function __construct(string $apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
 
     /**
      * @return string

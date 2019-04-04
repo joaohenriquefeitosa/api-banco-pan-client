@@ -1,22 +1,23 @@
 <?php
 
+
 namespace Pan\Resource;
 
-use Pan\Auth\Credencial;
+
+use Pan\Auth\Credential;
 use Pan\Http\HttpRequest;
-use Pan\Response;
 
 /**
- * Usuarios
+ * ReleaseMedium
  *
  * @package Pan\Resource
  */
-class Usuarios
+class ReleaseMedium
 {
     /**
      * @const string
      */
-    const ENDPOINT = 'usuarios';
+    const ENDPOINT = 'meio-liberacao';
 
     /**
      * @var HttpRequest
@@ -24,7 +25,7 @@ class Usuarios
     private $httpRequest;
 
     /**
-     * Covenants constructor.
+     * ReleaseMedium constructor.
      *
      * @throws \Exception
      */
@@ -44,26 +45,32 @@ class Usuarios
     /**
      * @param HttpRequest $httpRequest
      */
-    public function setHttpRequest(HttpRequest $httpRequest): void
+    public function setHttpRequest(HttpRequest $httpRequest)
     {
         $this->httpRequest = $httpRequest;
     }
 
     /**
-     * @param Credencial $credencial
+     * @param Credential $credencial
      * @param array $args
      *
-     * @return Response
+     * @return \Pan\Response
      */
-    public function listar(Credencial $credencial, array $args) : Response
+    public function list(Credential $credencial, array $args)
     {
-        $cpf = $args[0];
+        $codeAgreement = $args[0];
+        $operationType = $args[1];
+        $customerZipCode = $args[2];
+        $customerValue = $args[3];
 
         $params = [
-            'cpf' => $cpf
+            'codigo_convenio' => $codeAgreement,
+            'tipo_operacao' => $operationType,
+            'cep_cliente' => $customerZipCode,
+            'valor_cliente' => $customerValue
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBasic64($credencial->getApiKey(), $credencial->getUsername(), $credencial->getPassword());
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
 
         $result = $this->httpRequest->get(self::ENDPOINT, $params);
 

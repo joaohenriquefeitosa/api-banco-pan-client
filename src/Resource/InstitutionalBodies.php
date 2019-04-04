@@ -4,20 +4,21 @@
 namespace Pan\Resource;
 
 
-use Pan\Auth\Credencial;
+use Pan\Auth\Credential;
 use Pan\Http\HttpRequest;
+use Pan\Response;
 
 /**
- * MeioLiberacao
+ * InstitutionalBodies
  *
  * @package Pan\Resource
  */
-class MeioLiberacao
+class InstitutionalBodies
 {
     /**
      * @const string
      */
-    const ENDPOINT = 'meio-liberacao';
+    const ENDPOINT = 'orgaos';
 
     /**
      * @var HttpRequest
@@ -25,7 +26,7 @@ class MeioLiberacao
     private $httpRequest;
 
     /**
-     * MeioLiberacao constructor.
+     * InstitutionalBodies constructor.
      *
      * @throws \Exception
      */
@@ -51,26 +52,20 @@ class MeioLiberacao
     }
 
     /**
-     * @param Credencial $credencial
+     * @param Credential $credential
      * @param array $args
      *
-     * @return \Pan\Response
+     * @return Response
      */
-    public function listar(Credencial $credencial, array $args)
+    public function list(Credential $credential, array $args) : Response
     {
-        $codigoConvenio = $args[0];
-        $tipoOperacao = $args[1];
-        $cepCliente = $args[2];
-        $valorCliente = $args[3];
+        $codeAgreement = $args[0];
 
         $params = [
-            'codigo_convenio' => $codigoConvenio,
-            'tipo_operacao' => $tipoOperacao,
-            'cep_cliente' => $cepCliente,
-            'valor_cliente' => $valorCliente
+            'codigo_convenio' => $codeAgreement
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credential->getApiKey(), $credential->getAccessToken());
 
         $result = $this->httpRequest->get(self::ENDPOINT, $params);
 

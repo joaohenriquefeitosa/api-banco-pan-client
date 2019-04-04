@@ -1,12 +1,12 @@
 <?php
 
 
-use Pan\Auth\Credencial;
-use Pan\Resource\Filiais;
+use Pan\Auth\Credential;
+use Pan\Resource\Proposal;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
-class FiliaisTest extends TestCase
+class ProposalTest extends TestCase
 {
     /**
      * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
@@ -21,22 +21,21 @@ class FiliaisTest extends TestCase
             ->getMock();
 
         $this->httpRequest
-            ->method('get')
+            ->method('post')
             ->willReturn(new Response());
     }
 
-    public function testListShouldReturnResultObject()
+    public function testSimularShouldReturnResultObject()
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $filiais = new Filiais();
-        $filiais->setHttpRequest($this->httpRequest);
+        $proposal = new Proposal();
+        $proposal->setHttpRequest($this->httpRequest);
 
-        $credencial = new Credencial();
-        $credencial->setApiKey('api-key');
-        $credencial->setAccessToken('token');
+        $credential = new Credential('api-key');
+        $credential->setAccessToken('token');
 
-        $result = $filiais->listar($credencial, '');
+        $result = $proposal->simulate($credential, ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

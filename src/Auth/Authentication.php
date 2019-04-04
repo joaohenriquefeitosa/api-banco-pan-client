@@ -1,24 +1,22 @@
 <?php
 
+namespace Pan\Auth;
 
-namespace Pan\Resource;
-
-
-use Pan\Auth\Credencial;
+use Exception;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Orgaos
+ * Authentication
  *
- * @package Pan\Resource
+ * @package Pan\Auth
  */
-class Orgaos
+class Authentication
 {
     /**
      * @const string
      */
-    const ENDPOINT = 'orgaos';
+    const ENDPOINT = 'autenticacao';
 
     /**
      * @var HttpRequest
@@ -26,9 +24,9 @@ class Orgaos
     private $httpRequest;
 
     /**
-     * Orgaos constructor.
+     * Authentication constructor.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {
@@ -52,22 +50,25 @@ class Orgaos
     }
 
     /**
-     * @param Credencial $credencial
+     * @param Credential $credential
      * @param array $args
      *
      * @return Response
      */
-    public function listar(Credencial $credencial, array $args) : Response
+    public function authenticate(Credential $credential, array $args) : Response
     {
-        $codigoConvenio = $args[0];
+        $username = $args[0];
+        $password = $args[1];
 
         $params = [
-            'codigo_convenio' => $codigoConvenio
+            'username' => $username,
+            'password' => $password,
+            'grant_type' => $username . $password
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
+        $this->httpRequest->createHeaderAuthorizationBasic64($credential->getApiKey(), $credential->getUsername(), $credential->getPassword());
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $params);
+        $result = $this->httpRequest->post(self::ENDPOINT, $params);
 
         return $result;
     }

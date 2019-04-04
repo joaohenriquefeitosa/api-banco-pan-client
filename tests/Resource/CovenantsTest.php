@@ -1,7 +1,7 @@
 <?php
 
-use Pan\Auth\Credencial;
-use Pan\Resource\Convenios;
+use Pan\Auth\Credential;
+use Pan\Resource\Covenants;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -28,14 +28,13 @@ class CovenantsTest extends TestCase
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $convenios = new Convenios();
-        $convenios->setHttpRequest($this->httpRequest);
+        $covenants = new Covenants();
+        $covenants->setHttpRequest($this->httpRequest);
 
-        $credencial = new Credencial();
-        $credencial->setApiKey('api-key');
-        $credencial->setAccessToken('token');
+        $credential = new Credential('api-key');
+        $credential->setAccessToken('token');
 
-        $result = $convenios->listar($credencial, ['']);
+        $result = $covenants->list($credential, ['']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

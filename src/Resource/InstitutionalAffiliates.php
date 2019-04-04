@@ -2,16 +2,16 @@
 
 namespace Pan\Resource;
 
-use Pan\Auth\Credencial;
+use Pan\Auth\Credential;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Filiais
+ * InstitutionalAffiliates
  *
  * @package Pan\Resource
  */
-class Filiais
+class InstitutionalAffiliates
 {
     /**
      * @const string
@@ -24,7 +24,7 @@ class Filiais
     private $httpRequest;
 
     /**
-     * Filiais constructor.
+     * InstitutionalAffiliates constructor.
      *
      * @throws \Exception
      */
@@ -50,13 +50,13 @@ class Filiais
     }
 
     /**
-     * @param Credencial $credencial
+     * @param Credential $credential
      *
      * @return Response
      */
-    public function listar(Credencial $credencial) : Response
+    public function list(Credential $credential) : Response
     {
-        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credential->getApiKey(), $credential->getAccessToken());
 
         $result = $this->httpRequest->get(self::ENDPOINT);
 
