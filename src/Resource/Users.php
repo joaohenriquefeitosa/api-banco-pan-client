@@ -2,20 +2,21 @@
 
 namespace Pan\Resource;
 
+use Pan\Auth\Credential;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Convenios
+ * Users
  *
  * @package Pan\Resource
  */
-class Convenios
+class Users
 {
     /**
      * @const string
      */
-    const ENDPOINT = '5ca397924b00004e00209720';
+    const ENDPOINT = 'usuarios';
 
     /**
      * @var HttpRequest
@@ -23,7 +24,7 @@ class Convenios
     private $httpRequest;
 
     /**
-     * Convenios constructor.
+     * Covenants constructor.
      *
      * @throws \Exception
      */
@@ -43,31 +44,28 @@ class Convenios
     /**
      * @param HttpRequest $httpRequest
      */
-    public function setHttpRequest(HttpRequest $httpRequest)
+    public function setHttpRequest(HttpRequest $httpRequest): void
     {
         $this->httpRequest = $httpRequest;
     }
 
     /**
-     * @param string $apiKey
-     * @param string $accessToken
-     * @param string $codigoPromotora
+     * @param Credential $credential
+     * @param array $args
      *
      * @return Response
      */
-    public function listar(string $apiKey, string $accessToken, string $codigoPromotora) : Response
+    public function list(Credential $credential, array $args) : Response
     {
-        $header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $accessToken
-        ];
+        $cpf = $args[0];
 
         $params = [
-            'codigo_promotora' => $codigoPromotora
+            'cpf' => $cpf
         ];
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
+        $this->httpRequest->createHeaderAuthorizationBasic64($credential->getApiKey(), $credential->getUsername(), $credential->getPassword());
+
+        $result = $this->httpRequest->get(self::ENDPOINT, $params);
 
         return $result;
     }

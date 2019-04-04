@@ -1,11 +1,10 @@
 <?php
 
-
-use Pan\Resource\Filiais;
-use Pan\Response;
+use Pan\Auth\Credential;
+use Pan\Resource\Users;
 use PHPUnit\Framework\TestCase;
 
-class FiliaisTest extends TestCase
+class UsersTest extends TestCase
 {
     /**
      * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
@@ -21,18 +20,22 @@ class FiliaisTest extends TestCase
 
         $this->httpRequest
             ->method('get')
-            ->willReturn(new Response());
+            ->willReturn(new \Pan\Response());
     }
 
     public function testListShouldReturnResultObject()
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $filiais = new Filiais();
-        $filiais->setHttpRequest($this->httpRequest);
+        $users = new Users();
+        $users->setHttpRequest($this->httpRequest);
 
-        $result = $filiais->listar("", "");
+        $credential = new Credential('api-key');
+        $credential->setUsername('username');
+        $credential->setPassword('password');
 
-        $this->assertInstanceOf(Response::class, $result);
+        $result = $users->list($credential, ['']);
+
+        $this->assertInstanceOf(\Pan\Response::class, $result);
     }
 }

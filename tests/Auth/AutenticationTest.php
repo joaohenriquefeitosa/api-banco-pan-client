@@ -1,11 +1,12 @@
 <?php
 
+
+use Pan\Auth\Authentication;
 use Pan\Auth\Credential;
-use Pan\Resource\Covenants;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
-class CovenantsTest extends TestCase
+class AutenticationTest extends TestCase
 {
     /**
      * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
@@ -20,21 +21,21 @@ class CovenantsTest extends TestCase
             ->getMock();
 
         $this->httpRequest
-            ->method('get')
+            ->method('post')
             ->willReturn(new Response());
     }
 
-    public function testListShouldReturnResultObject()
-    {
+    public function testAuthenticationSuccessfully() {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $covenants = new Covenants();
-        $covenants->setHttpRequest($this->httpRequest);
+        $authentication = new Authentication();
+        $authentication->setHttpRequest($this->httpRequest);
 
         $credential = new Credential('api-key');
-        $credential->setAccessToken('token');
+        $credential->setUsername('username');
+        $credential->setPassword('password');
 
-        $result = $covenants->list($credential, ['']);
+        $result = $authentication->authenticate($credential, ['', '']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

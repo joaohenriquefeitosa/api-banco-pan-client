@@ -1,21 +1,24 @@
 <?php
 
+
 namespace Pan\Resource;
 
+
+use Pan\Auth\Credential;
 use Pan\Http\HttpRequest;
 use Pan\Response;
 
 /**
- * Usuarios
+ * InstitutionalBodies
  *
  * @package Pan\Resource
  */
-class Usuarios
+class InstitutionalBodies
 {
     /**
      * @const string
      */
-    const ENDPOINT = '5ca397924b00004e00209720';
+    const ENDPOINT = 'orgaos';
 
     /**
      * @var HttpRequest
@@ -23,7 +26,7 @@ class Usuarios
     private $httpRequest;
 
     /**
-     * Covenants constructor.
+     * InstitutionalBodies constructor.
      *
      * @throws \Exception
      */
@@ -43,24 +46,28 @@ class Usuarios
     /**
      * @param HttpRequest $httpRequest
      */
-    public function setHttpRequest(HttpRequest $httpRequest): void
+    public function setHttpRequest(HttpRequest $httpRequest)
     {
         $this->httpRequest = $httpRequest;
     }
 
-    public function listar(string $apiKey, string $accessToken, string $cpf) : Response
+    /**
+     * @param Credential $credential
+     * @param array $args
+     *
+     * @return Response
+     */
+    public function list(Credential $credential, array $args) : Response
     {
-        $header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $accessToken
-        ];
+        $codeAgreement = $args[0];
 
         $params = [
-            'cpf' => $cpf
+            'codigo_convenio' => $codeAgreement
         ];
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $header, $params);
+        $this->httpRequest->createHeaderAuthorizationBearerToken($credential->getApiKey(), $credential->getAccessToken());
+
+        $result = $this->httpRequest->get(self::ENDPOINT, $params);
 
         return $result;
     }

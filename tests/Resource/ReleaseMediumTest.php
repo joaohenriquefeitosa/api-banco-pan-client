@@ -1,11 +1,12 @@
 <?php
 
 
-use Pan\Resource\Orgaos;
+use Pan\Auth\Credential;
+use Pan\Resource\ReleaseMedium;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
-class OrgaosTest extends TestCase
+class ReleaseMediumTest extends TestCase
 {
     /**
      * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
@@ -28,10 +29,13 @@ class OrgaosTest extends TestCase
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $orgaos = new Orgaos();
-        $orgaos->setHttpRequest($this->httpRequest);
+        $releaseMedium = new ReleaseMedium();
+        $releaseMedium->setHttpRequest($this->httpRequest);
 
-        $result = $orgaos->listar("", "", "");
+        $credential = new Credential('api-key');
+        $credential->setAccessToken('token');
+
+        $result = $releaseMedium->list($credential, ['', '', '', '']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

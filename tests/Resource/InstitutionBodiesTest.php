@@ -1,11 +1,12 @@
 <?php
 
 
-use Pan\Auth\Autenticacao;
+use Pan\Auth\Credential;
+use Pan\Resource\InstitutionalBodies;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
-class AutenticacaoTest extends TestCase
+class InstitutionBodiesTest extends TestCase
 {
     /**
      * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
@@ -20,17 +21,21 @@ class AutenticacaoTest extends TestCase
             ->getMock();
 
         $this->httpRequest
-            ->method('post')
+            ->method('get')
             ->willReturn(new Response());
     }
 
-    public function testAuthenticationSuccessfully() {
+    public function testListShouldReturnResultObject()
+    {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $autenticacao = new Autenticacao();
-        $autenticacao->setHttpRequest($this->httpRequest);
+        $institutionalBodies = new InstitutionalBodies();
+        $institutionalBodies->setHttpRequest($this->httpRequest);
 
-        $result = $autenticacao->autenticar("", "", "");
+        $credential = new Credential('api-key');
+        $credential->setAccessToken('token');
+
+        $result = $institutionalBodies->list($credential, ['']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

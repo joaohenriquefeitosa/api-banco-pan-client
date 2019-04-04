@@ -1,11 +1,12 @@
 <?php
 
 
-use Pan\Resource\MeioLiberacao;
+use Pan\Auth\Credential;
+use Pan\Resource\Proposal;
 use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
-class MeioLiberacaoTest extends TestCase
+class ProposalTest extends TestCase
 {
     /**
      * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
@@ -20,18 +21,21 @@ class MeioLiberacaoTest extends TestCase
             ->getMock();
 
         $this->httpRequest
-            ->method('get')
+            ->method('post')
             ->willReturn(new Response());
     }
 
-    public function testListShouldReturnResultObject()
+    public function testSimularShouldReturnResultObject()
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $meioLiberacao = new MeioLiberacao();
-        $meioLiberacao->setHttpRequest($this->httpRequest);
+        $proposal = new Proposal();
+        $proposal->setHttpRequest($this->httpRequest);
 
-        $result = $meioLiberacao->listar("", "", "", "", "", "");
+        $credential = new Credential('api-key');
+        $credential->setAccessToken('token');
+
+        $result = $proposal->simulate($credential, ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

@@ -1,9 +1,12 @@
 <?php
 
-use Pan\Resource\Usuarios;
+
+use Pan\Auth\Credential;
+use Pan\Resource\InstitutionalAffiliates;
+use Pan\Response;
 use PHPUnit\Framework\TestCase;
 
-class UsuariosTest extends TestCase
+class InstitutionalAffiliateTest extends TestCase
 {
     /**
      * @var \Pan\Http\HttpRequest | \PHPUnit\Framework\MockObject\MockObject
@@ -19,18 +22,21 @@ class UsuariosTest extends TestCase
 
         $this->httpRequest
             ->method('get')
-            ->willReturn(new \Pan\Response());
+            ->willReturn(new Response());
     }
 
     public function testListShouldReturnResultObject()
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $usuarios = new Usuarios();
-        $usuarios->setHttpRequest($this->httpRequest);
+        $institutionalAffiliate = new InstitutionalAffiliates();
+        $institutionalAffiliate->setHttpRequest($this->httpRequest);
 
-        $result = $usuarios->listar("", "", "");
+        $credential = new Credential('api-key');
+        $credential->setAccessToken('token');
 
-        $this->assertInstanceOf(\Pan\Response::class, $result);
+        $result = $institutionalAffiliate->list($credential, '');
+
+        $this->assertInstanceOf(Response::class, $result);
     }
 }
