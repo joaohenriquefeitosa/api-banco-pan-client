@@ -1,6 +1,8 @@
 <?php
 
+namespace PanTest;
 
+use InvalidArgumentException;
 use Pan\Auth\Authentication;
 use Pan\Auth\Credential;
 use Pan\Client;
@@ -56,6 +58,29 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(Response::class, $result);
     }
 
+    public function testAuthenticationShouldThrowInvalidArgumentExceptionWhenNotGivenPassword()
+    {
+        $authentication = $this
+            ->getMockBuilder(Authentication::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $response = new Response();
+        $response->setContent([
+            'access_token' => 'token'
+        ]);
+
+        $authentication
+            ->method('authenticate')
+            ->willReturn($response);
+
+        $this->client->setAuthentication($authentication);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->client->authenticate('');
+    }
+
     public function testCovenantsShouldReturnResultObject()
     {
         $covenants = $this
@@ -71,6 +96,44 @@ class ClientTest extends TestCase
         $result = $this->client->covenants('');
 
         $this->assertInstanceOf(Response::class, $result);
+    }
+
+    public function testCovenantsShouldThrowInvalidArgumentExceptionWhenNotGivenPromoterCode()
+    {
+        $covenants = $this
+            ->getMockBuilder(Covenants::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $covenants
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setCovenants($covenants);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->client->covenants();
+    }
+
+    public function testCovenantsShouldThrowExceptionWhenNotAuthenticated()
+    {
+        $covenants = $this
+            ->getMockBuilder(Covenants::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $covenants
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setCredential(new Credential('api-key'));
+
+        $this->client->setCovenants($covenants);
+
+        $this->expectException(\Exception::class);
+
+        $this->client->covenants(['']);
     }
 
     public function testInstitutionalAffiliatesShouldReturnResultObject()
@@ -90,6 +153,26 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(Response::class, $result);
     }
 
+    public function testInstitutionalAffiliatesShouldThrowExceptionWhenNotAuthenticated()
+    {
+        $institutionalAffiliates = $this
+            ->getMockBuilder(InstitutionalAffiliates::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $institutionalAffiliates
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setInstitutionalAffiliates($institutionalAffiliates);
+
+        $this->client->setCredential(new Credential('api-key'));
+
+        $this->expectException(\Exception::class);
+
+        $this->client->institutionalAffiliates();
+    }
+
     public function testInstitutionalBodiesShouldReturnResultObject()
     {
         $institutionalBodies = $this
@@ -105,6 +188,44 @@ class ClientTest extends TestCase
         $result = $this->client->institutionalBodies(['']);
 
         $this->assertInstanceOf(Response::class, $result);
+    }
+
+    public function testInstitutionalBodiesShouldThrowInvalidArgumentExceptionWhenNotGivenCodeAgreement()
+    {
+        $institutionalBodies = $this
+            ->getMockBuilder(InstitutionalBodies::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $institutionalBodies
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setInstitutionalBodies($institutionalBodies);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->client->institutionalBodies();
+    }
+
+    public function testInstitutionalBodiesShouldThrowExceptionWhenNotAuthenticated()
+    {
+        $institutionalBodies = $this
+            ->getMockBuilder(InstitutionalBodies::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $institutionalBodies
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setInstitutionalBodies($institutionalBodies);
+
+        $this->client->setCredential(new Credential('api-key'));
+
+        $this->expectException(\Exception::class);
+
+        $this->client->institutionalBodies(['']);
     }
 
     public function testReleaseMediumShouldReturnResultObject()
@@ -124,6 +245,44 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(Response::class, $result);
     }
 
+    public function testReleaseMediumShouldThrowInvalidArgumentExceptionWhenNotGivenCustomerValue()
+    {
+        $releaseMedium = $this
+            ->getMockBuilder(ReleaseMedium::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $releaseMedium
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setReleaseMedium($releaseMedium);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->client->releaseMedium('','','');
+    }
+
+    public function testReleaseMediumShouldThrowExceptionWhenNotAuthenticated()
+    {
+        $releaseMedium = $this
+            ->getMockBuilder(ReleaseMedium::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $releaseMedium
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setReleaseMedium($releaseMedium);
+
+        $this->client->setCredential(new Credential('api-key'));
+
+        $this->expectException(\Exception::class);
+
+        $this->client->releaseMedium('','','', '');
+    }
+
     public function testUsersShouldReturnResultObject()
     {
         $users = $this
@@ -141,6 +300,44 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(Response::class, $result);
     }
 
+    public function testUsersShouldThrowInvalidArgumentExceptionWhenNotGivenCpf()
+    {
+        $users = $this
+            ->getMockBuilder(Users::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $users
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setUsers($users);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->client->users();
+    }
+
+    public function testUsersShouldThrowExceptionWhenNotAuthenticated()
+    {
+        $users = $this
+            ->getMockBuilder(Users::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $users
+            ->method('list')
+            ->willReturn(new Response());
+
+        $this->client->setUsers($users);
+
+        $this->client->setCredential(new Credential('api-key'));
+
+        $this->expectException(\Exception::class);
+
+        $this->client->users(['']);
+    }
+
     public function testSimulateProposalShouldReturnResultObject()
     {
         $proposal = $this
@@ -156,5 +353,43 @@ class ClientTest extends TestCase
         $result = $this->client->simulateProposal('','','','','','','','','','','','','','','','');
 
         $this->assertInstanceOf(Response::class, $result);
+    }
+
+    public function testUsersShouldThrowInvalidArgumentExceptionWhenNotGivenOperationType()
+    {
+        $proposal = $this
+            ->getMockBuilder(Proposal::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $proposal
+            ->method('simulate')
+            ->willReturn(new Response());
+
+        $this->client->setProposal($proposal);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->client->simulateProposal('','','','','','','','','','','','','','','');
+    }
+
+    public function testSimulateProposalShouldThrowExceptionWhenNotAuthenticated()
+    {
+        $proposal = $this
+            ->getMockBuilder(Proposal::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $proposal
+            ->method('simulate')
+            ->willReturn(new Response());
+
+        $this->client->setProposal($proposal);
+
+        $this->client->setCredential(new Credential('api-key'));
+
+        $this->expectException(\Exception::class);
+
+        $this->client->simulateProposal('','','','','','','','','','','','','','','','');
     }
 }

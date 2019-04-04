@@ -34,14 +34,6 @@ class Authentication
     }
 
     /**
-     * @return HttpRequest
-     */
-    public function getHttpRequest(): HttpRequest
-    {
-        return $this->httpRequest;
-    }
-
-    /**
      * @param HttpRequest $httpRequest
      */
     public function setHttpRequest(HttpRequest $httpRequest)

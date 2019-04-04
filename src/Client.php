@@ -3,7 +3,7 @@
 namespace Pan;
 
 use Exception;
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Pan\Auth\Authentication;
 use Pan\Auth\Credential;
 use Pan\Resource\Covenants;
@@ -128,7 +128,7 @@ class Client
     public function institutionalAffiliates(): Response
     {
         if (!$this->isAuthenticated()) {
-            throw new Exception('Need to authenticate');
+            throw new InvalidArgumentException('Need to authenticate');
         }
 
         $result = $this->institutionalAffiliates->list($this->credential);
@@ -224,6 +224,8 @@ class Client
 
     /**
      * @param Authentication $authentication
+     *
+     * @codeCoverageIgnore
      */
     public function setAuthentication(Authentication $authentication): void
     {
@@ -232,6 +234,8 @@ class Client
 
     /**
      * @param Covenants $covenants
+     *
+     * @codeCoverageIgnore
      */
     public function setCovenants(Covenants $covenants): void
     {
@@ -240,6 +244,8 @@ class Client
 
     /**
      * @param InstitutionalAffiliates $institutionalAffiliates
+     *
+     * @codeCoverageIgnore
      */
     public function setInstitutionalAffiliates(InstitutionalAffiliates $institutionalAffiliates): void
     {
@@ -248,6 +254,8 @@ class Client
 
     /**
      * @param InstitutionalBodies $institutionalBodies
+     *
+     * @codeCoverageIgnore
      */
     public function setInstitutionalBodies(InstitutionalBodies $institutionalBodies): void
     {
@@ -256,6 +264,8 @@ class Client
 
     /**
      * @param ReleaseMedium $releaseMedium
+     *
+     * @codeCoverageIgnore
      */
     public function setReleaseMedium(ReleaseMedium $releaseMedium): void
     {
@@ -264,6 +274,8 @@ class Client
 
     /**
      * @param Users $users
+     *
+     * @codeCoverageIgnore
      */
     public function setUsers(Users $users): void
     {
@@ -272,6 +284,8 @@ class Client
 
     /**
      * @param Proposal $proposal
+     *
+     * @codeCoverageIgnore
      */
     public function setProposal(Proposal $proposal): void
     {
@@ -280,6 +294,8 @@ class Client
 
     /**
      * @param Credential $credential
+     *
+     * @codeCoverageIgnore
      */
     public function setCredential(Credential $credential): void
     {

@@ -2,7 +2,7 @@ version: 2
 jobs:
   build-and-test:
     docker:
-      - image: circleci/php:7.1-node-browsers
+      - image: circleci/php:7.1.9-browsers
 
     steps:
       - checkout
@@ -30,8 +30,20 @@ jobs:
             - ./vendor
 
       - run:
+          name: Setup Code Climate test-reporter
+          command: |
+          # download test reporter as a static binary
+             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+             chmod +x ./cc-test-reporter
+
+      - run:
           name: Unit Tests
-          command: ./vendor/bin/phpunit --configuration phpunit.xml.dist
+          command: |
+          # notify Code Climate of a pending test report using `before-build`
+            ./cc-test-reporter before-build
+            ./vendor/bin/phpunit --configuration phpunit.xml.dist
+          # upload test report to Code Climate using `after-build`
+             ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
 
 workflows:
   version: 2

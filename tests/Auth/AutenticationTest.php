@@ -1,6 +1,5 @@
 <?php
 
-
 use Pan\Auth\Authentication;
 use Pan\Auth\Credential;
 use Pan\Response;
