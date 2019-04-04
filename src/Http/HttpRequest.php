@@ -8,6 +8,7 @@ use Pan\Response;
 /**
  * Post
  *
+ * @codeCoverageIgnore
  * @package Pan\Connect
  */
 class HttpRequest

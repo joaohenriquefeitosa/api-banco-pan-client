@@ -36,16 +36,6 @@ class Proposal
     }
 
     /**
-     * @return HttpRequest
-     *
-     * @throws \Exception
-     */
-    public function getHttpRequest(): HttpRequest
-    {
-        return $this->httpRequest;
-    }
-
-    /**
      * @param HttpRequest $httpRequest
      */
     public function setHttpRequest(HttpRequest $httpRequest)

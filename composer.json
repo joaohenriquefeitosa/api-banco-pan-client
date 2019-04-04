@@ -15,12 +15,12 @@
     },
     "require": {
         "ext-curl": "*",
-        "ext-json": "*",
-        "ext-http": "*"
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
-            "Pan\\": "src/"
+            "Pan\\": "src/",
+            "PanTest\\":  "tests/"
         }
     }
 }

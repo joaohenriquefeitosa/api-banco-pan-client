@@ -34,6 +34,7 @@ class Credential
     public function __construct(string $apiKey)
     {
         $this->apiKey = $apiKey;
+        $this->accessToken = '';
     }
 
     /**
@@ -58,14 +59,6 @@ class Credential
     public function getApiKey(): string
     {
         return $this->apiKey;
-    }
-
-    /**
-     * @param string $apiKey
-     */
-    public function setApiKey(string $apiKey): void
-    {
-        $this->apiKey = $apiKey;
     }
 
     /**

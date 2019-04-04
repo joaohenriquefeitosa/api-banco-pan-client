@@ -1,6 +1,9 @@
 # api-banco-pan-client
 
-[![CircleCI](https://circleci.com/gh/bevicred/api-banco-pan-client/tree/master.svg?style=svg)](https://circleci.com/gh/bevicred/api-banco-pan-client/tree/master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CircleCI](https://circleci.com/gh/bevicred/api-banco-pan-client/tree/master.svg?style=svg)](https://circleci.com/gh/bevicred/api-banco-pan-client/tree/master) 
+[![Maintainability](https://api.codeclimate.com/v1/badges/864b0ebccd07bd925893/maintainability)](https://codeclimate.com/github/bevicred/api-banco-pan-client/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/864b0ebccd07bd925893/test_coverage)](https://codeclimate.com/github/bevicred/api-banco-pan-client/test_coverage)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Client para integração com a API Consignado do Banco PAN.
 
