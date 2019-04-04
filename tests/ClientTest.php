@@ -1,8 +1,5 @@
 <?php
 
-namespace PanTest;
-
-use InvalidArgumentException;
 use Pan\Auth\Authentication;
 use Pan\Auth\Credential;
 use Pan\Client;
