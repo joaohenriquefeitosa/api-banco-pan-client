@@ -3,9 +3,9 @@
 namespace Pan;
 
 use Exception;
-use InvalidArgumentException;
 use Pan\Auth\Authentication;
 use Pan\Auth\Credential;
+use Pan\Exceptions\InvalidArgumentException;
 use Pan\Resource\Covenants;
 use Pan\Resource\InstitutionalAffiliates;
 use Pan\Resource\InstitutionalBodies;
@@ -113,7 +113,7 @@ class Client
             throw new InvalidArgumentException("Missing Parameters");
         }
         if (!$this->isAuthenticated()) {
-            throw new Exception('Need to authenticate');
+            throw new Exception();
         }
 
         $result = $this->covenants->list($this->credential, $args);
@@ -128,7 +128,7 @@ class Client
     public function institutionalAffiliates(): Response
     {
         if (!$this->isAuthenticated()) {
-            throw new InvalidArgumentException('Need to authenticate');
+            throw new Exception('Need to authenticate');
         }
 
         $result = $this->institutionalAffiliates->list($this->credential);
