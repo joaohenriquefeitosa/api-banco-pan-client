@@ -42,15 +42,15 @@ class InstitutionalAffiliates
     }
 
     /**
-     * @param Credential $credential
+     * @param array $config
      *
      * @return Response
      */
-    public function list(Credential $credential) : Response
+    public function list(array $config) : Response
     {
-        $this->httpRequest->createHeaderAuthorizationBearerToken($credential->getApiKey(), $credential->getAccessToken());
+        $config['endpoint'] = self::ENDPOINT;
 
-        $result = $this->httpRequest->get(self::ENDPOINT);
+        $result = $this->httpRequest->get($config);
 
         return $result;
     }

@@ -2,7 +2,6 @@
 
 namespace Pan;
 
-use Exception;
 use Pan\Auth\Authentication;
 use Pan\Auth\Credential;
 use Pan\Exceptions\InvalidArgumentException;
@@ -55,19 +54,24 @@ class Client
     private $proposal;
 
     /**
-     * @var Credential
+     * @var array
      */
-    private $credential;
+    private $config;
 
     /**
      * Client constructor.
      *
      * @param string $apiKey
+     * @param string $baseApiPath
      *
      * @throws \Exception
      */
-    public function __construct(string $apiKey)
+    public function __construct(string $apiKey, string $baseApiPath)
     {
+        if (empty($apiKey) or empty($baseApiPath)) {
+            throw new InvalidArgumentException("Missing Parameters");
+        }
+
         $this->authentication = new Authentication();
         $this->covenants = new Covenants();
         $this->institutionalAffiliates = new InstitutionalAffiliates();
@@ -75,14 +79,18 @@ class Client
         $this->releaseMedium = new ReleaseMedium();
         $this->users = new Users();
         $this->proposal = new Proposal();
-        $this->credential = new Credential($apiKey);
+
+        $this->config = [
+            '$baseApiPath' => $baseApiPath,
+            'credential' => new Credential($apiKey)
+        ];
     }
 
     /**
      * @param array $args
      *
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function authenticate(...$args) : Response
     {
@@ -90,14 +98,14 @@ class Client
             throw new InvalidArgumentException("Missing Parameters");
         }
 
-        $this->credential->setUsername($args[0]);
-        $this->credential->setPassword($args[1]);
+        $this->config['credential']->setUsername($args[0]);
+        $this->config['credential']->setPassword($args[1]);
 
-        $result = $this->authentication->authenticate($this->credential, $args);
+        $result = $this->authentication->authenticate($this->config, $args);
 
         $token = $result->getContent()["access_token"];
 
-        $this->credential->setAccessToken($token);
+        $this->config['credential']->setAccessToken($token);
 
         return $result;
     }
@@ -106,7 +114,7 @@ class Client
      * @param array $args
      *
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function covenants(...$args) : Response
     {
@@ -117,14 +125,14 @@ class Client
             throw new UnautorizedException("Need to authenticate");
         }
 
-        $result = $this->covenants->list($this->credential, $args);
+        $result = $this->covenants->list($this->config, $args);
 
         return $result;
     }
 
     /**
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function institutionalAffiliates(): Response
     {
@@ -132,7 +140,7 @@ class Client
             throw new UnautorizedException("Need to authenticate");
         }
 
-        $result = $this->institutionalAffiliates->list($this->credential);
+        $result = $this->institutionalAffiliates->list($this->config);
 
         return $result;
     }
@@ -141,7 +149,7 @@ class Client
      * @param array $args
      *
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function institutionalBodies(...$args): Response
     {
@@ -152,7 +160,7 @@ class Client
             throw new UnautorizedException("Need to authenticate");
         }
 
-        $result = $this->institutionalBodies->list($this->credential, $args);
+        $result = $this->institutionalBodies->list($this->config, $args);
 
         return $result;
     }
@@ -161,7 +169,7 @@ class Client
      * @param array $args
      *
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function releaseMedium(...$args): Response
     {
@@ -172,7 +180,7 @@ class Client
             throw new UnautorizedException("Need to authenticate");
         }
 
-        $result = $this->releaseMedium->list($this->credential, $args);
+        $result = $this->releaseMedium->list($this->config, $args);
 
         return $result;
     }
@@ -181,7 +189,7 @@ class Client
      * @param array $args
      *
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function users(...$args) : Response
     {
@@ -192,7 +200,7 @@ class Client
             throw new UnautorizedException("Need to authenticate");
         }
 
-        $result = $this->users->list($this->credential, $args);
+        $result = $this->users->list($this->config, $args);
 
         return $result;
     }
@@ -201,7 +209,7 @@ class Client
      * @param array $args
      *
      * @return Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function simulateProposal(...$args) : Response
     {
@@ -212,7 +220,7 @@ class Client
             throw new UnautorizedException("Need to authenticate");
         }
 
-        return $this->proposal->simulate($this->credential, $args);
+        return $this->proposal->simulate($this->config, $args);
     }
 
     /**
@@ -220,7 +228,13 @@ class Client
      */
     private function isAuthenticated()
     {
-        return !empty($this->credential) and !empty($this->credential->getAccessToken());
+        if (!isset($this->config['credential']))
+            return false;
+
+        $username = $this->config['credential']->getUsername();
+        $password = $this->config['credential']->getPassword();
+
+        return !empty($username) and !empty($password);
     }
 
     /**
@@ -294,12 +308,10 @@ class Client
     }
 
     /**
-     * @param Credential $credential
-     *
-     * @codeCoverageIgnore
+     * @param array $config
      */
-    public function setCredential(Credential $credential): void
+    public function setConfig(array $config): void
     {
-        $this->credential = $credential;
+        $this->config = $config;
     }
 }

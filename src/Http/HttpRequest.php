@@ -13,13 +13,6 @@ use Pan\Response;
  */
 class HttpRequest
 {
-    const API_BASE_PATH = 'https://sandbox.bancopan.com.br/consignado/v1/';
-
-    /**
-     * @var object
-     */
-    private $header;
-
     /**
      * HttpRequest constructor.
      *
@@ -33,49 +26,54 @@ class HttpRequest
     }
 
     /**
+     * @param array $config
      * @param array $params
-     * @param string $endpoint
      *
      * @return Response
      */
-    public function post(string $endpoint, array $params = []) : Response
+    public function post(array $config, array $params = []) : Response
     {
-        $ch = curl_init(self::API_BASE_PATH . $endpoint);
+        $ch = curl_init($config['baseApiPath'] . '/' . $config['endpoint']);
 
         curl_setopt($ch, CURLOPT_POST, TRUE);
 
-        $result = $this->sendRequest($ch, $params);
+        $header = $this->createHeaderAuthorization($config);
+
+        $result = $this->sendRequest($ch, $header, $params);
 
         return $result;
     }
 
     /**
-     * @param string $endpoint
+     * @param array $config
      * @param array $params
      *
      * @return Response
      */
-    public function get(string $endpoint, array $params = []) : Response
+    public function get(array $config, array $params = []) : Response
     {
-        $ch = curl_init(self::API_BASE_PATH . $endpoint);
+        $ch = curl_init($config['baseApiPath'] . '/' . $config['endpoint']);
 
         curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
 
-        $result = $this->sendRequest($ch, $params);
+        $header = $this->createHeaderAuthorization($config);
+
+        $result = $this->sendRequest($ch, $header, $params);
 
         return $result;
     }
 
     /**
      * @param resource $ch
+     * @param array $header
      * @param array $params
      *
      * @return Response
      */
-    private function sendRequest($ch, array $params) : Response
+    private function sendRequest($ch, array $header, array $params) : Response
     {
         curl_setopt_array($ch, [
-            CURLOPT_HTTPHEADER => $this->header,
+            CURLOPT_HTTPHEADER => $header,
             CURLOPT_USERAGENT => "PHP SDK",
             CURLOPT_REFERER => $_SERVER['REMOTE_ADDR'],
             CURLOPT_RETURNTRANSFER => true,
@@ -95,29 +93,27 @@ class HttpRequest
     }
 
     /**
-     * @param string $apiKey
-     * @param string $username
-     * @param $password
+     * @param array $config
+     *
+     * @return array
      */
-    public function createHeaderAuthorizationBasic64(string $apiKey, string $username, string $password) : void
+    private function createHeaderAuthorization(array $config) : array
     {
-        $this->header = [
+        $header = [
             'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Basic ' . base64_encode($username . $password)
+            'Api-Key' => $config['credential']->getApiKey()
         ];
-    }
 
-    /**
-     * @param string $apiKey
-     * @param string $accessToken
-     */
-    public function createHeaderAuthorizationBearerToken(string $apiKey, string $accessToken) : void
-    {
-        $this->header = [
-            'Content-type' => 'application/json',
-            'Api-Key' => $apiKey,
-            'Authorization' => 'Bearer ' . $accessToken
-        ];
+        $endpoint = $config['endpoint'];
+        if ($endpoint == 'autenticacao' or $endpoint == 'usuarios')
+        {
+            $header['Authorization'] = 'Basic ' . base64_encode($config['credential']->getUsername() . $config['credential']->getPassword());
+        }
+        else
+        {
+            $header['Authorization'] = 'Bearer ' . $config['credential']->getAccessToken();
+        }
+
+        return $header;
     }
 }

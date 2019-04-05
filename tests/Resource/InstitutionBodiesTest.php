@@ -13,6 +13,11 @@ class InstitutionBodiesTest extends TestCase
      */
     private $httpRequest;
 
+    /**
+     * @var array
+     */
+    private $config;
+
     public function setUp()
     {
         $this->httpRequest = $this
@@ -23,6 +28,12 @@ class InstitutionBodiesTest extends TestCase
         $this->httpRequest
             ->method('get')
             ->willReturn(new Response());
+
+        $this->config = [
+            'basePathApi' => '',
+            'credential' => new Credential('apiKey')
+        ];
+        $this->config['credential']->setAccessToken('token');
     }
 
     public function testListShouldReturnResultObject()
@@ -32,10 +43,7 @@ class InstitutionBodiesTest extends TestCase
         $institutionalBodies = new InstitutionalBodies();
         $institutionalBodies->setHttpRequest($this->httpRequest);
 
-        $credential = new Credential('api-key');
-        $credential->setAccessToken('token');
-
-        $result = $institutionalBodies->list($credential, ['']);
+        $result = $institutionalBodies->list($this->config, ['']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

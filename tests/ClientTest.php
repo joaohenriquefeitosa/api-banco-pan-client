@@ -19,18 +19,25 @@ class ClientTest extends TestCase
      */
     private $client;
 
+    /**
+     * @var array
+     */
+    private $config;
+
     public function setUp()
     {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $this->client = new Client('Api-Key');
+        $this->client = new Client('apiKey', 'baseApiPath');
 
-        $credential = new Credential('Api-Key');
-        $credential->setUsername('username');
-        $credential->setPassword('password');
-        $credential->setAccessToken('token');
+        $this->config = [
+            'basePathApi' => '',
+            'credential' => new Credential('apiKey')
+        ];
+        $this->config['credential']->setUsername('username');
+        $this->config['credential']->setPassword('password');
 
-        $this->client->setCredential($credential);
+        $this->client->setConfig($this->config);
     }
 
     public function testAuthenticationShouldReturnResultObject()
@@ -124,7 +131,9 @@ class ClientTest extends TestCase
             ->method('list')
             ->willReturn(new Response());
 
-        $this->client->setCredential(new Credential('api-key'));
+        $this->client->setConfig([
+            'credential' => new Credential('apiKey')
+        ]);
 
         $this->client->setCovenants($covenants);
 
@@ -163,7 +172,9 @@ class ClientTest extends TestCase
 
         $this->client->setInstitutionalAffiliates($institutionalAffiliates);
 
-        $this->client->setCredential(new Credential('api-key'));
+        $this->client->setConfig([
+            'credential' => new Credential('apiKey')
+        ]);
 
         $this->expectException(Pan\Exceptions\UnautorizedException::class);
 
@@ -218,7 +229,9 @@ class ClientTest extends TestCase
 
         $this->client->setInstitutionalBodies($institutionalBodies);
 
-        $this->client->setCredential(new Credential('api-key'));
+        $this->client->setConfig([
+            'credential' => new Credential('apiKey')
+        ]);
 
         $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
@@ -273,7 +286,9 @@ class ClientTest extends TestCase
 
         $this->client->setReleaseMedium($releaseMedium);
 
-        $this->client->setCredential(new Credential('api-key'));
+        $this->client->setConfig([
+            'credential' => new Credential('apiKey')
+        ]);
 
         $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
@@ -328,7 +343,9 @@ class ClientTest extends TestCase
 
         $this->client->setUsers($users);
 
-        $this->client->setCredential(new Credential('api-key'));
+        $this->client->setConfig([
+            'credential' => new Credential('apiKey')
+        ]);
 
         $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
@@ -383,10 +400,19 @@ class ClientTest extends TestCase
 
         $this->client->setProposal($proposal);
 
-        $this->client->setCredential(new Credential('api-key'));
+        $this->client->setConfig([
+            'credential' => new Credential('apiKey')
+        ]);
 
         $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
         $this->client->simulateProposal('','','','','','','','','','','','','','','','');
+    }
+
+    public function testShouldReceiveInstanceOfClient()
+    {
+        $client = new Client('apiKey', 'baseUrl');
+
+        $this->assertInstanceOf('\Pan\Client', $client);
     }
 }

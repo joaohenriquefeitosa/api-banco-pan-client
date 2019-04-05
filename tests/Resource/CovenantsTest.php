@@ -12,6 +12,11 @@ class CovenantsTest extends TestCase
      */
     private $httpRequest;
 
+    /**
+     * @var array
+     */
+    private $config;
+
     public function setUp()
     {
         $this->httpRequest = $this
@@ -22,6 +27,12 @@ class CovenantsTest extends TestCase
         $this->httpRequest
             ->method('get')
             ->willReturn(new Response());
+
+        $this->config = [
+            'basePathApi' => '',
+            'credential' => new Credential('apiKey')
+        ];
+        $this->config['credential']->setAccessToken('token');
     }
 
     public function testListShouldReturnResultObject()
@@ -31,10 +42,7 @@ class CovenantsTest extends TestCase
         $covenants = new Covenants();
         $covenants->setHttpRequest($this->httpRequest);
 
-        $credential = new Credential('api-key');
-        $credential->setAccessToken('token');
-
-        $result = $covenants->list($credential, ['']);
+        $result = $covenants->list($this->config, ['']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

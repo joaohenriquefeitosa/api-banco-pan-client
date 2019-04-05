@@ -42,12 +42,12 @@ class Users
     }
 
     /**
-     * @param Credential $credential
+     * @param array $config
      * @param array $args
      *
      * @return Response
      */
-    public function list(Credential $credential, array $args) : Response
+    public function list(array $config, array $args) : Response
     {
         $cpf = $args[0];
 
@@ -55,9 +55,9 @@ class Users
             'cpf' => $cpf
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBasic64($credential->getApiKey(), $credential->getUsername(), $credential->getPassword());
+        $config['endpoint'] = self::ENDPOINT;
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $params);
+        $result = $this->httpRequest->get($config, $params);
 
         return $result;
     }

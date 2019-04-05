@@ -42,12 +42,12 @@ class Authentication
     }
 
     /**
-     * @param Credential $credential
+     * @param array $config
      * @param array $args
      *
      * @return Response
      */
-    public function authenticate(Credential $credential, array $args) : Response
+    public function authenticate(array $config, array $args) : Response
     {
         $username = $args[0];
         $password = $args[1];
@@ -58,9 +58,9 @@ class Authentication
             'grant_type' => $username . $password
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBasic64($credential->getApiKey(), $credential->getUsername(), $credential->getPassword());
+        $config['endpoint'] = self::ENDPOINT;
 
-        $result = $this->httpRequest->post(self::ENDPOINT, $params);
+        $result = $this->httpRequest->post($config, $params);
 
         return $result;
     }

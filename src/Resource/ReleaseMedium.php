@@ -43,12 +43,12 @@ class ReleaseMedium
     }
 
     /**
-     * @param Credential $credencial
+     * @param array $config
      * @param array $args
      *
      * @return \Pan\Response
      */
-    public function list(Credential $credencial, array $args)
+    public function list(array $config, array $args)
     {
         $codeAgreement = $args[0];
         $operationType = $args[1];
@@ -62,9 +62,9 @@ class ReleaseMedium
             'valor_cliente' => $customerValue
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBearerToken($credencial->getApiKey(), $credencial->getAccessToken());
+        $config['endpoint'] = self::ENDPOINT;
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $params);
+        $result = $this->httpRequest->get($config, $params);
 
         return $result;
     }
