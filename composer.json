@@ -9,7 +9,7 @@
             "email": "caio.russi@bevicred.com.br"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require-dev": {
         "phpunit/phpunit": "^7"
     },

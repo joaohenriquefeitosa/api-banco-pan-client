@@ -128,7 +128,7 @@ class ClientTest extends TestCase
 
         $this->client->setCovenants($covenants);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
         $this->client->covenants(['']);
     }
@@ -165,7 +165,7 @@ class ClientTest extends TestCase
 
         $this->client->setCredential(new Credential('api-key'));
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Pan\Exceptions\UnautorizedException::class);
 
         $this->client->institutionalAffiliates();
     }
@@ -220,7 +220,7 @@ class ClientTest extends TestCase
 
         $this->client->setCredential(new Credential('api-key'));
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
         $this->client->institutionalBodies(['']);
     }
@@ -275,7 +275,7 @@ class ClientTest extends TestCase
 
         $this->client->setCredential(new Credential('api-key'));
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
         $this->client->releaseMedium('','','', '');
     }
@@ -330,7 +330,7 @@ class ClientTest extends TestCase
 
         $this->client->setCredential(new Credential('api-key'));
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
         $this->client->users(['']);
     }
@@ -385,7 +385,7 @@ class ClientTest extends TestCase
 
         $this->client->setCredential(new Credential('api-key'));
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\Pan\Exceptions\UnautorizedException::class);
 
         $this->client->simulateProposal('','','','','','','','','','','','','','','','');
     }

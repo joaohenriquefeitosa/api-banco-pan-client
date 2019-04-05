@@ -6,6 +6,7 @@ use Exception;
 use Pan\Auth\Authentication;
 use Pan\Auth\Credential;
 use Pan\Exceptions\InvalidArgumentException;
+use Pan\Exceptions\UnautorizedException;
 use Pan\Resource\Covenants;
 use Pan\Resource\InstitutionalAffiliates;
 use Pan\Resource\InstitutionalBodies;
@@ -113,7 +114,7 @@ class Client
             throw new InvalidArgumentException("Missing Parameters");
         }
         if (!$this->isAuthenticated()) {
-            throw new Exception();
+            throw new UnautorizedException("Need to authenticate");
         }
 
         $result = $this->covenants->list($this->credential, $args);
@@ -128,7 +129,7 @@ class Client
     public function institutionalAffiliates(): Response
     {
         if (!$this->isAuthenticated()) {
-            throw new Exception('Need to authenticate');
+            throw new UnautorizedException("Need to authenticate");
         }
 
         $result = $this->institutionalAffiliates->list($this->credential);
@@ -148,7 +149,7 @@ class Client
             throw new InvalidArgumentException("Missing Parameters");
         }
         if (!$this->isAuthenticated()) {
-            throw new Exception('Need to authenticate');
+            throw new UnautorizedException("Need to authenticate");
         }
 
         $result = $this->institutionalBodies->list($this->credential, $args);
@@ -168,7 +169,7 @@ class Client
             throw new InvalidArgumentException("Missing Parameters");
         }
         if (!$this->isAuthenticated()) {
-            throw new Exception('Need to authenticate');
+            throw new UnautorizedException("Need to authenticate");
         }
 
         $result = $this->releaseMedium->list($this->credential, $args);
@@ -188,7 +189,7 @@ class Client
             throw new InvalidArgumentException("Missing Parameters");
         }
         if (!$this->isAuthenticated()) {
-            throw new Exception('Need to authenticate');
+            throw new UnautorizedException("Need to authenticate");
         }
 
         $result = $this->users->list($this->credential, $args);
@@ -208,7 +209,7 @@ class Client
             throw new InvalidArgumentException("Missing Parameters");
         }
         if (!$this->isAuthenticated()) {
-            throw new Exception('Need to authenticate');
+            throw new UnautorizedException("Need to authenticate");
         }
 
         return $this->proposal->simulate($this->credential, $args);
