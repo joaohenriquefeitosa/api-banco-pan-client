@@ -73,7 +73,7 @@ class ClientTest extends TestCase
 
         $this->client->setAuthentication($authentication);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\Pan\Exceptions\InvalidArgumentException::class);
 
         $this->client->authenticate('');
     }
@@ -108,7 +108,7 @@ class ClientTest extends TestCase
 
         $this->client->setCovenants($covenants);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\Pan\Exceptions\InvalidArgumentException::class);
 
         $this->client->covenants();
     }
@@ -200,7 +200,7 @@ class ClientTest extends TestCase
 
         $this->client->setInstitutionalBodies($institutionalBodies);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\Pan\Exceptions\InvalidArgumentException::class);
 
         $this->client->institutionalBodies();
     }
@@ -255,7 +255,7 @@ class ClientTest extends TestCase
 
         $this->client->setReleaseMedium($releaseMedium);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\Pan\Exceptions\InvalidArgumentException::class);
 
         $this->client->releaseMedium('','','');
     }
@@ -310,7 +310,7 @@ class ClientTest extends TestCase
 
         $this->client->setUsers($users);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\Pan\Exceptions\InvalidArgumentException::class);
 
         $this->client->users();
     }
@@ -365,7 +365,7 @@ class ClientTest extends TestCase
 
         $this->client->setProposal($proposal);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\Pan\Exceptions\InvalidArgumentException::class);
 
         $this->client->simulateProposal('','','','','','','','','','','','','','','');
     }

@@ -6,7 +6,7 @@ use Exception;
 use Pan\Response;
 
 /**
- * Post
+ * HttpRequest
  *
  * @codeCoverageIgnore
  * @package Pan\Connect
