@@ -44,12 +44,12 @@ class InstitutionalBodies
     }
 
     /**
-     * @param Credential $credential
+     * @param array $config
      * @param array $args
      *
      * @return Response
      */
-    public function list(Credential $credential, array $args) : Response
+    public function list(array $config, array $args) : Response
     {
         $codeAgreement = $args[0];
 
@@ -57,9 +57,9 @@ class InstitutionalBodies
             'codigo_convenio' => $codeAgreement
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBearerToken($credential->getApiKey(), $credential->getAccessToken());
+        $config['endpoint'] = self::ENDPOINT;
 
-        $result = $this->httpRequest->get(self::ENDPOINT, $params);
+        $result = $this->httpRequest->get($config, $params);
 
         return $result;
     }

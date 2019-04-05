@@ -12,6 +12,11 @@ class AutenticationTest extends TestCase
      */
     private $httpRequest;
 
+    /**
+     * @var array
+     */
+    private $config;
+
     public function setUp()
     {
         $this->httpRequest = $this
@@ -22,6 +27,13 @@ class AutenticationTest extends TestCase
         $this->httpRequest
             ->method('post')
             ->willReturn(new Response());
+
+        $this->config = [
+            'basePathApi' => '',
+            'credential' => new Credential('apiKey')
+        ];
+        $this->config['credential']->setUsername('username');
+        $this->config['credential']->setPassword('password');
     }
 
     public function testAuthenticationSuccessfully() {
@@ -30,11 +42,7 @@ class AutenticationTest extends TestCase
         $authentication = new Authentication();
         $authentication->setHttpRequest($this->httpRequest);
 
-        $credential = new Credential('api-key');
-        $credential->setUsername('username');
-        $credential->setPassword('password');
-
-        $result = $authentication->authenticate($credential, ['', '']);
+        $result = $authentication->authenticate($this->config, ['', '']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

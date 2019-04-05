@@ -44,12 +44,12 @@ class Proposal
     }
 
     /**
-     * @param Credential $credential
+     * @param array $config
      * @param array $args
      *
      * @return Response
      */
-    public function simulate(Credential $credential, array $args) : Response
+    public function simulate(array $config, array $args) : Response
     {
         $userCode = $args[0];
         $subsidiaryCode = $args[1];
@@ -87,9 +87,9 @@ class Proposal
             'tipo_operacao' => $operationType
         ];
 
-        $this->httpRequest->createHeaderAuthorizationBearerToken($credential->getApiKey(), $credential->getAccessToken());
+        $config['endpoint'] = self::ENDPOINT;
 
-        $result = $this->httpRequest->post(self::ENDPOINT, $params);
+        $result = $this->httpRequest->post($config, $params);
 
         return $result;
     }

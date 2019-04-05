@@ -11,6 +11,11 @@ class UsersTest extends TestCase
      */
     private $httpRequest;
 
+    /**
+     * @var array
+     */
+    private $config;
+
     public function setUp()
     {
         $this->httpRequest = $this
@@ -21,6 +26,13 @@ class UsersTest extends TestCase
         $this->httpRequest
             ->method('get')
             ->willReturn(new \Pan\Response());
+
+        $this->config = [
+            'basePathApi' => '',
+            'credential' => new Credential('apiKey')
+        ];
+        $this->config['credential']->setUsername('username');
+        $this->config['credential']->setPassword('password');
     }
 
     public function testListShouldReturnResultObject()
@@ -30,11 +42,7 @@ class UsersTest extends TestCase
         $users = new Users();
         $users->setHttpRequest($this->httpRequest);
 
-        $credential = new Credential('api-key');
-        $credential->setUsername('username');
-        $credential->setPassword('password');
-
-        $result = $users->list($credential, ['']);
+        $result = $users->list($this->config, ['']);
 
         $this->assertInstanceOf(\Pan\Response::class, $result);
     }

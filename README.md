@@ -18,7 +18,7 @@ composer require bevicred-digital/api-banco-pan-client
 ## Exemplo de utilização
 ### Autenticação
 ```php
-$client = new Client("{Api-Key}");  
+$client = new Client("{apiKey}", "{baseUrlApi}");  
 $client->authenticate("{username}", "{password}");
 ```
 ### Convênios

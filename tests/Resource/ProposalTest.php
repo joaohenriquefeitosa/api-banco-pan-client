@@ -13,6 +13,11 @@ class ProposalTest extends TestCase
      */
     private $httpRequest;
 
+    /**
+     * @var array
+     */
+    private $config;
+
     public function setUp()
     {
         $this->httpRequest = $this
@@ -23,6 +28,12 @@ class ProposalTest extends TestCase
         $this->httpRequest
             ->method('post')
             ->willReturn(new Response());
+
+        $this->config = [
+            'basePathApi' => '',
+            'credential' => new Credential('apiKey')
+        ];
+        $this->config['credential']->setAccessToken('token');
     }
 
     public function testSimularShouldReturnResultObject()
@@ -32,10 +43,7 @@ class ProposalTest extends TestCase
         $proposal = new Proposal();
         $proposal->setHttpRequest($this->httpRequest);
 
-        $credential = new Credential('api-key');
-        $credential->setAccessToken('token');
-
-        $result = $proposal->simulate($credential, ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+        $result = $proposal->simulate($this->config, ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
 
         $this->assertInstanceOf(Response::class, $result);
     }

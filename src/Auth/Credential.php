@@ -35,6 +35,8 @@ class Credential
     {
         $this->apiKey = $apiKey;
         $this->accessToken = '';
+        $this->username = '';
+        $this->password = '';
     }
 
     /**
